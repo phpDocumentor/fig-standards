@@ -112,7 +112,7 @@ interpreted as described in [RFC 2119][RFC2119].
   * constant
   * variables, both local and global scope.
 
-  It is RECOMMENDED to precede a "Structural Element" with a DocBlock with its
+  It is RECOMMENDED to precede a Structural Element with a DocBlock with its
   definition and not with each usage.
 
   Example:
@@ -158,7 +158,7 @@ interpreted as described in [RFC 2119][RFC2119].
   assist their auto-completion functionality.
 
   This Standard does not cover this specific instance as a `foreach` statement
-  is not considered to be a "Structural Element" but a Control Flow statement.
+  is not considered to be a Structural Element but a Control Flow statement.
 
   ```php
   /** @type \Sqlite3 $sqlite */
@@ -196,11 +196,11 @@ interpreted as described in [RFC 2119][RFC2119].
 * "DocBlock" is a "DocComment" containing a single "PHPDoc" structure and
   represents the basic in-source representation.
 
-* "Tag" is a single piece of meta information regarding a "Structural Element"
+* "Tag" is a single piece of meta information regarding a Structural Element
   or a component thereof.
 
 * "Inline PHPDoc" is a "PHPDoc" that is related to a "Tag" instead of a
-  "Structural element". It replaces the description part of the "Tag".
+  Structural Element. It replaces the description part of the "Tag".
 
 * "Type" is the determination of what type of data is associated with an element.
   This is commonly used when determining the exact values of arguments, constants,
@@ -216,7 +216,7 @@ interpreted as described in [RFC 2119][RFC2119].
   identify class/interface/trait members and re-apply the principles of the FQCN
   to Interfaces, Traits, Functions and global Constants.
 
-  The following notations can be used per type of "Structural Element":
+  The following notations can be used per type of Structural Element:
 
   *Namespace*:      `\My\Space`
   *Function*:       `\My\Space\myFunction()`
@@ -273,7 +273,7 @@ interpreted as described in [RFC 2119][RFC2119].
 * A PHPDoc MUST always be contained in a "DocComment"; the combination of these
   two is called a "DocBlock".
 
-* A DocBlock MUST directly precede a "Structural Element"
+* A DocBlock MUST directly precede a Structural Element.
 
   > An exception to this principle is the File-level DocBlock which MUST be
   > placed at the top of a PHP source code file.
@@ -301,7 +301,7 @@ Examples of use are included in chapter 5.4.
 
 ### 5.1. Short Description
 
-A short description MUST contain an abstract of the "Structural Element"
+A short description MUST contain an abstract of the Structural Element
 defining the purpose. It is RECOMMENDED for short descriptions to span a single
 line or at most two but not more than that.
 
@@ -319,7 +319,7 @@ to do so.
 ### 5.2. Long Description
 
 The long description is OPTIONAL but SHOULD be included when the
-"Structural Element", which this DocBlock precedes, contains more operations, or
+Structural Element, which this DocBlock precedes, contains more operations, or
 more complex operations, than can be described in the short description alone.
 
 Any application parsing the long description is RECOMMENDED to support the
@@ -332,18 +332,18 @@ Common uses for the long description are (amongst others):
 * To specify of what child elements an input or output array, or object, is
   composed.
 * To provide a set of common use cases or scenarios in which the
-  "Structural Element" may be applied.
+  Structural Element may be applied.
 
 ### 5.3. Tags
 
 Tags provide a way for authors to supply concise meta-data regarding the
-succeeding "Structural Element". They commonly consist of a name followed by
+succeeding Structural Element. They commonly consist of a name followed by
 white-space and a description or Inline PHPDoc.
 If a description is provided, it MAY span multiple lines and COULD follow a
 strict format dictated by the type of tag, as indicated by its name.
 
 The meta-data supplied by tags could result in a change of actual runtime behaviour
-of the succeeding "Structural Element", in which case the term "Annotation" is
+of the succeeding Structural Element, in which case the term "Annotation" is
 commonly used instead of "Tag".
 
 A variation of this is where, instead of a description, a tag-signature is used;
@@ -361,7 +361,7 @@ annotations may be implemented.
 
 Tag names indicate what type of information is represented by this tag, or in
 case of annotations which behaviour must be injected into the succeeding
-"Structural Element".
+Structural Element.
 
 In support of annotations, it is allowable to introduce a set of tags designed
 specifically for an individual application or subset of applications (and thus
@@ -408,7 +408,7 @@ Tag signatures are commonly used for annotations to supply additional meta-data
 specific to the current tag.
 
 The supplied meta-data can influence the behavior of the owning annotation and
-as such influence the behavior of the succeeding "Structural Element".
+as such influence the behavior of the succeeding Structural Element.
 
 The contents of a signature are to be determined by the tag type (as described
 in the tag-name) and fall beyond the scope of this specification. However, a
@@ -518,10 +518,10 @@ class MyMagicClass
 ## 6. Inheritance
 
 PHPDoc's also have the ability to inherit information when the succeeding
-"Structural Element" has a super-element (such as a super-class or a method with
+Structural Element has a super-element (such as a super-class or a method with
 the same name in a super-class or implemented in a super-interface).
 
-Every "Structural Element" MUST inherit the following PHPDoc parts by default:
+Every Structural Element MUST inherit the following PHPDoc parts by default:
 
 * [Short description](#51-short-description)
 * [Long description](#52-long-description)
@@ -530,7 +530,7 @@ Every "Structural Element" MUST inherit the following PHPDoc parts by default:
   * [@author](#82-author)
   * [@copyright](#84-copyright)
 
-Each specific "Structural Element" MUST also inherit a specialized subset as
+Each specific Structural Element MUST also inherit a specialized subset as
 defined in the sub-chapters.
 
 The PHPDoc parts MUST NOT be inherited when a replacement is available in the
@@ -647,7 +647,7 @@ public function __construct(array $options = array())
 ### As @struct declaration
 
 In some cases a hash should be documented multiple times in the same class. For
-these purposes you COULD declare it as a 'virtual' "Structural Element" using
+these purposes you COULD declare it as a 'virtual' Structural Element using
 the @struct tag in the declaration of a Class or Interface.
 
 It is RECOMMENDED to use native language constructs in these situations, such as
@@ -662,7 +662,7 @@ times in each "DocBlock".
 
 ### 8.1. @api
 
-The @api tag is used to declare "Structural Elements" as being suitable for
+The @api tag is used to declare Structural Elements as being suitable for
 consumption by third parties.
 
 #### Syntax
@@ -671,13 +671,13 @@ consumption by third parties.
 
 #### Description
 
-The @api tag represents those "Structural Elements" with a public visibility
+The @api tag represents those Structural Elements with a public visibility
 which are intended to be the public API components for a library or framework.
-Other "Structural Elements" with a public visibility serve to support the
+Other Structural Elements with a public visibility serve to support the
 internal structure and are not recommended to be used by the consumer.
 
-The exact meaning of "Structural Elements" tagged with @api MAY differ per
-project. It is however RECOMMENDED that all tagged "Structural Elements" SHOULD
+The exact meaning of Structural Elements tagged with @api MAY differ per
+project. It is however RECOMMENDED that all tagged Structural Elements SHOULD
 NOT change after publication unless the new version is tagged as breaking
 Backwards Compatibility.
 
@@ -699,7 +699,7 @@ function showVersion()
 
 ### 8.2. @author
 
-The @author tag is used to document the author of any "Structural Element".
+The @author tag is used to document the author of any Structural Element.
 
 #### Syntax
 
@@ -707,7 +707,7 @@ The @author tag is used to document the author of any "Structural Element".
 
 #### Description
 
-The @author tag can be used to indicate who has created a "Structural Element"
+The @author tag can be used to indicate who has created a Structural Element
 or has made significant modifications to it. This tag MAY also contain an
 e-mail address. If an e-mail address is provided it MUST follow
 the author's name and be contained in chevrons, or angle brackets, and MUST
@@ -760,7 +760,7 @@ This tag MUST NOT occur more than once in a "DocBlock".
 ### 8.4. @copyright
 
 The @copyright tag is used to document the copyright information of any
-"Structural element".
+Structural Element.
 
 #### Syntax
 
@@ -768,8 +768,8 @@ The @copyright tag is used to document the copyright information of any
 
 #### Description
 
-The @copyright tag defines who holds the copyright over the "Structural Element".
-The copyright indicated with this tag applies to the "Structural Element" to
+The @copyright tag defines who holds the copyright over the Structural Element.
+The copyright indicated with this tag applies to the Structural Element to
 which it applies and all child elements unless otherwise noted.
 
 The format of the description if governed by the coding standard of each
@@ -786,7 +786,7 @@ covered by this copyright and the organization involved.
 
 ### 8.5. @deprecated
 
-The @deprecated tag is used to indicate which 'Structural elements' are
+The @deprecated tag is used to indicate which Structural Elements are
 deprecated and are to be removed in a future version.
 
 #### Syntax
@@ -795,7 +795,7 @@ deprecated and are to be removed in a future version.
 
 #### Description
 
-The @deprecated tag declares that the associated 'Structural elements' will
+The @deprecated tag declares that the associated Structural Elements will
 be removed in a future version as it has become obsolete or its usage is
 otherwise not recommended.
 
@@ -822,7 +822,7 @@ same 'PHPDoc' pointing to the new element.
 ### 8.6. @example
 
 The @example tag is used to link to an external source code file which contains
-an example of use for the current "Structural element". An inline variant exists
+an example of use for the current Structural Element. An inline variant exists
 with which code from an example file can be shown inline with the Long
 Description.
 
@@ -837,8 +837,8 @@ or inline:
 #### Description
 
 The example tag refers to a file containing example code demonstrating the
-purpose and use of the current "Structural element". Multiple example tags may
-be used per "Structural element" in case several scenarios are described.
+purpose and use of the current Structural Element. Multiple example tags may
+be used per Structural Element in case several scenarios are described.
 
 The URI provided with the example tag is resolved according to the following
 rules:
@@ -854,7 +854,7 @@ rules:
    example tag and the found folder should be made.
 4. If the application was unable to resolve a path given the previous rules then
    it should check if a readable folder 'examples' is found in the root folder
-   of the project containing the source file of the "Structural Element".
+   of the project containing the source file of the Structural Element.
 
    > The root folder of a project is the highest folder common to all files
    > that are being processed by a consuming application.
@@ -937,7 +937,7 @@ variable and a variable documented in the project.
 
 ### 8.8. @internal
 
-The @internal tag is used to denote that the associated "Structural Element" is
+The @internal tag is used to denote that the associated Structural Element is
 a structure internal to this application or library. It may also be used inside
 a long description to insert a piece of text that is only applicable for
 the developers of this software.
@@ -958,7 +958,7 @@ one.
 #### Description
 
 The @internal tag can be used as counterpart of the @api tag, indicating that
-the associated "Structural Element" is used purely for the internal workings of
+the associated Structural Element is used purely for the internal workings of
 this piece of software.
 
 When generating documentation from PHPDoc comments it is RECOMMENDED to hide the
@@ -1001,7 +1001,7 @@ function count()
 ### 8.9. @license
 
 The @license tag is used to indicate which license is applicable for the
-associated 'Structural Elements'.
+associated Structural Elements.
 
 #### Syntax
 
@@ -1010,7 +1010,7 @@ associated 'Structural Elements'.
 #### Description
 
 The @license tag provides the user with the name and URL of the license that is
-applicable to 'Structural Elements' and any of their child elements.
+applicable to Structural Elements and any of their child elements.
 
 It is NOT RECOMMENDED to apply @license tags to any 'PHPDoc' other than
 file-level PHPDocs as this may cause confusion which license applies at which
@@ -1035,7 +1035,7 @@ and this SHOULD be interpreted as if having the URL mentioned in the registry.
 ### 8.10. @link
 
 The @link tag indicates a custom relation between the associated
-"Structural Element" and a website, which is identified by an absolute URI.
+Structural Element and a website, which is identified by an absolute URI.
 
 #### Syntax
 
@@ -1048,7 +1048,7 @@ or inline
 #### Description
 
 The @link tag can be used to define a relation, or link, between the
-"Structural Element", or part of the long description when used inline,
+Structural Element, or part of the long description when used inline,
 to an URI.
 
 The URI MUST be complete and welformed as specified in RFC 2396.
@@ -1135,7 +1135,7 @@ class Child extends Parent
 
 ### 8.12. @package
 
-The @package tag is used to categorize "Structural Elements" into logical
+The @package tag is used to categorize Structural Elements into logical
 subdivisions.
 
 #### Syntax
@@ -1145,7 +1145,7 @@ subdivisions.
 #### Description
 
 The @package tag can be used as a counterpart or supplement to Namespaces.
-Namespaces provide a functional subdivision of "Structural Elements" where the
+Namespaces provide a functional subdivision of Structural Elements where the
 @package tag can provide a *logical* subdivision in which way the elements can
 be grouped with a different hierarchy.
 
@@ -1156,7 +1156,7 @@ Each level in the logical hierarchy MUST separated with a backslash (`\`) to
 be familiar to Namespaces. A hierarchy MAY be of endless depth but it is
 RECOMMENDED to keep the depth at less or equal than six levels.
 
-Please note that the @package applies to different "Structural Elements"
+Please note that the @package applies to different Structural Elements
 depending where it is defined.
 
 1. If the @package is defined in the *file-level* DocBlock then it only applies
@@ -1206,7 +1206,7 @@ It is RECOMMENDED when documenting to use this tag with every function and
 method. Exceptions to this recommendation are:
 
 This tag MUST NOT occur more than once per parameter in a "PHPDoc" and is
-limited to "Structural Elements" of type method or function.
+limited to Structural Elements of type method or function.
 
 #### Examples
 
@@ -1312,7 +1312,7 @@ Exceptions to this recommendation are:
    `@return void` is provided.
 
 This tag MUST NOT occur more than once in a "DocBlock" and is limited to the
-"DocBlock" of a "Structural Element" of a method or function.
+"DocBlock" of a Structural Element of a method or function.
 
 #### Examples
 
@@ -1336,8 +1336,8 @@ function getLabel()
 
 ### 8.16. @see
 
-The @see tag indicates a reference from the associated "Structural Elements" to
-a website or other "Structural Elements".
+The @see tag indicates a reference from the associated Structural Elements to
+a website or other Structural Elements.
 
 #### Syntax
 
@@ -1346,9 +1346,9 @@ a website or other "Structural Elements".
 #### Description
 
 The @see tag can be used to define a reference to other
-"Structural Elements" or to an URI.
+Structural Elements or to an URI.
 
-When defining a reference to another "Structural Elements" you can refer to a
+When defining a reference to another Structural Elements you can refer to a
 specific element by appending a double colon and providing the name of that
 element (also called the "FQSEN").
 
@@ -1437,7 +1437,7 @@ TODO: determine whether this is a correct approach
 
 ### 8.19. @subpackage [deprecated]
 
-The @subpackage tag is used to categorize "Structural Elements" into logical
+The @subpackage tag is used to categorize Structural Elements into logical
 subdivisions.
 
 #### Syntax
@@ -1447,7 +1447,7 @@ subdivisions.
 #### Description
 
 The @subpackage tag MAY be used as a counterpart or supplement to Namespaces.
-Namespaces provide a functional subdivision of "Structural Elements" where
+Namespaces provide a functional subdivision of Structural Elements where
 the @subpackage tag can provide a *logical* subdivision in which way the
 elements can be grouped with a different hierarchy.
 
@@ -1471,7 +1471,7 @@ DocBlock.
 
 ### 8.20. @throws
 
-The @throws tag is used to indicate whether "Structural Elements" throw a
+The @throws tag is used to indicate whether Structural Elements throw a
 specific type of exception.
 
 #### Syntax
@@ -1480,7 +1480,7 @@ specific type of exception.
 
 #### Description
 
-The @throws tag MAY be used to indicate that "Structural Elements" throw a
+The @throws tag MAY be used to indicate that Structural Elements throw a
 specific type of error.
 
 The type provided with this tag MUST represent an object of the class Exception
@@ -1516,7 +1516,7 @@ function count($items)
 ### 8.21. @todo
 
 The @todo tag is used to indicate whether any development activities should
-still be executed on associated "Structural Elements".
+still be executed on associated Structural Elements.
 
 #### Syntax
 
@@ -1525,7 +1525,7 @@ still be executed on associated "Structural Elements".
 #### Description
 
 The @todo tag is used to indicate that an activity surrounding the associated
-"Structural Elements" must still occur. Each tag MUST be accompanied by
+Structural Elements must still occur. Each tag MUST be accompanied by
 a description that communicates the intent of the original author; this could
 however be as short as providing an issue number.
 
@@ -1548,7 +1548,7 @@ function count()
 ### 8.22. @type
 
 You may use the @type tag to document the "Type" of the following
-"Structural Elements":
+Structural Elements:
 
 * Constants, both class and global
 * Properties
@@ -1644,8 +1644,8 @@ class Foo
 
 ### 8.23. @uses
 
-Indicates whether the current "Structural Element" consumes the
-"Structural Element", or project file, that is provided as target.
+Indicates whether the current Structural Element consumes the
+Structural Element, or project file, that is provided as target.
 
 #### Syntax
 
@@ -1653,11 +1653,11 @@ Indicates whether the current "Structural Element" consumes the
 
 #### Description
 
-The @uses tag describes whether any part of the associated "Structural Element"
-uses, or consumes, another "Structural Element" or a file that is situated in
+The @uses tag describes whether any part of the associated Structural Element
+uses, or consumes, another Structural Element or a file that is situated in
 the current project.
 
-When defining a reference to another "Structural Element" you can refer to a
+When defining a reference to another Structural Element you can refer to a
 specific element by appending a double colon and providing the name of that
 element (also called the "FQSEN").
 
