@@ -10,6 +10,8 @@ The goal for this specification is two-fold:
    applications to determine the location of a file resource on a medium,
    as supported by PHP, when a "Fully Qualified Class Name" is provided.
 
+>> See comment in PR.
+
 2. As a specification for software maintainers on how to name and structure
    namespaces in an application so that a uniform representation develops.
 
