@@ -57,9 +57,6 @@ Cons:
 
 * This PSR does not provide a recommendation on how and when to use the concepts described in this document,
   so it is not a coding standard.
-* This PSR facilitates the creation of annotations by allowing the notation needed for Symfony/Doctrine style
-  annotations, but does not describe a style of annotations or which "defined annotations" exist in use. The concept of annotations is only
-  alluded to and is out of scope for this PSR.
 
 4. Approaches
 -------------

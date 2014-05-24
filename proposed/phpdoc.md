@@ -55,14 +55,11 @@ The main purpose of this PSR is to provide a complete and formal definition of
 the PHPDoc standard. This PSR deviates from its predecessor, the de-facto PHPDoc
 Standard associated with [phpDocumentor 1.x][PHPDOC.ORG], to provide
 support for newer features in the PHP language and to address some of the
-shortcomings of its predecessor.
+shortcomings of its predecessor.  It also establishes a minimally 
+formalized syntax for annotations.
 
 This document SHALL NOT:
 
-* Describe a standard for implementing annotations via PHPDoc. Although it does
-  offer versatility which makes it possible to create a subsequent PSR based on
-  current practices. See [chapter 5.3](#53-tags) for more information on this
-  topic.
 * Describe best practices or recommendations for Coding Standards on the
   application of the PHPDoc standard. This document is limited to a formal
   specification of syntax and intention.
@@ -184,6 +181,9 @@ interpreted as described in [RFC 2119][RFC2119].
 * "Tag" is a single piece of meta information regarding a "Structural Element"
   or a component thereof.
 
+* "Annotation" is a specially formatted "Tag" that is a marker that typically
+  affects runtime processing, and is not considered documentation per se.
+ 
 * "Inline PHPDoc" is a "PHPDoc" that is related to a "Tag" instead of a
   "Structural element". It replaces the description part of the "Tag".
 
@@ -244,9 +244,10 @@ definition:
     inline-phpdoc      = "{" *SP PHPDoc *SP "}"
     summary            = *CHAR ("." 1*CRLF / 2*CRLF)
     description        = 1*(CHAR / inline-tag) 1*CRLF ; any amount of characters
-                                                     ; with inline tags inside
+                                                      ; with inline tags inside
     tags               = *(tag 1*CRLF)
     inline-tag         = "{" tag "}"
+    annotation         = "@" tag-name *SP tag-signature
     tag                = "@" tag-name [":" tag-specialization] [tag-details]
     tag-name           = (ALPHA / "\") *(ALPHA / DIGIT / "\" / "-" / "_")
     tag-specialization = 1*(ALPHA / DIGIT / "-")
@@ -329,15 +330,8 @@ in most cases the tag will in fact be an "Annotation". The tag signature is
 able to provide the annotation with parameters regarding its operation.
 
 If a tag signature is present then there MUST NOT be a description present in
-the same tag.
-
-The meta-data supplied by tags could result in a change of actual runtime 
-behavior of the succeeding "Structural Element", in which case the term 
-"Annotation" is commonly used instead of "Tag".
-
-Annotations will not be described in further detail in this specification as
-this falls beyond scope. This specification provides a basis on top of which
-annotations may be implemented.
+the same tag.  A tag signature SHOULD NOT expect any Markdown formatting to be
+honored by the documentor application.
 
 #### 5.3.1. Tag Name
 
@@ -349,7 +343,7 @@ In support of annotations, it is allowable to introduce a set of tags designed
 specifically for an individual application or subset of applications (and thus
 not covered by this specification).
 
-These tags, or annotations, MUST provide a namespace by either
+These tags, or annotations, MAY provide a namespace by either
 
 * prefixing the tag name with a PHP-style namespace, or by
 * prefixing the tag name with a single vendor-name followed by a hyphen.
@@ -380,9 +374,6 @@ Example of a tag name prefixed with a vendor name and hyphen:
 ```php
 @phpdoc-event transformer.transform.pre
 ```
-
-Tag names that are not prefixed with a vendor or namespace MUST be described in
-this specification (see chapter 7) and/or any official addendum.
 
 #### 5.3.2. Tag Signature
 
