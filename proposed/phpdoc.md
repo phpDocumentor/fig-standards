@@ -196,26 +196,13 @@ interpreted as described in [RFC 2119][RFC2119].
 * "Semantic Version" refers to the definition as set in the [Semantic Versioning
   Specification 2.0.0][SEMVER2].
 
-* "FQSEN" is an abbreviation for Fully Qualified Structural Element Name. This
-  notation expands on the Fully Qualified Class Name and adds a notation to
-  identify class/interface/trait members and re-apply the principles of the FQCN
-  to Interfaces, Traits, Functions and global Constants.
+* "FQCN" is an abbreviation for Fully Qualified Class Name.
 
-  The following notations can be used per type of "Structural Element":
-
-  *Namespace*:      `\My\Space`
-  *Function*:       `\My\Space\myFunction()`
-  *Constant*:       `\My\Space\MY_CONSTANT`
-  *Class*:          `\My\Space\MyClass`
-  *Interface*:      `\My\Space\MyInterface`
-  *Trait*:          `\My\Space\MyTrait`
-  *Method*:         `\My\Space\MyClass::myMethod()`
-  *Property*:       `\My\Space\MyClass::$my_property`
-  *Class Constant*: `\My\Space\MyClass::MY_CONSTANT`
-
-* "FQSEN" is short for 'Fully Qualified Structural Element Name'. This is the
+* "FQSEN" is an abbreviation for Fully Qualified Structural Element Name. This is the
   unique identifier for each Structural Element and should not occur more than
-  once in a project.
+  once in a project. This notation expands on the Fully Qualified Class Name ("FQCN")
+  and adds a notation to identify class/interface/trait members and re-apply the
+  principles of the FQCN to Interfaces, Traits, Functions and global Constants.
 
   A FQSEN has the following [ABNF][RFC5234]
   definition:
@@ -228,29 +215,31 @@ interpreted as described in [RFC 2119][RFC2119].
           property = fqcn "::$" name
           function = fqnn "\" name "()"
           name     = (ALPHA / "_") *(ALPHA / DIGIT / "_")
-
-  Example, namespace:
+  
+  **Examples:**
+  
+  Namespace:
         `\My\Space`
 
-  Example, function:
+  Function:
         `\My\Space\function()`
 
-  Example, constant:
+  Constant:
         `\My\Space\constant`
-
-  Example, trait:
+ 
+  Trait:
         `\My\Space\FactoryTrait`
-
-  Example, interface:
+ 
+  Interface:
         `\My\Space\FactoryInterface`
-
-  Example, class:
+  
+  Class:
         `\My\Space\Factory`
-
-  Example, method:
+  
+  Method:
         `\My\Space\Factory::method()`
-
-  Example, class constant:
+        
+  Class constant:
         `\My\Space\Factory::constant`
 
 ## 4. Basic Principles
