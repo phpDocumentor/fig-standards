@@ -43,10 +43,10 @@ PSR-5: PHPDoc
       8.20. @throws
       8.21. @todo
       8.22. @type
-      8.23. @typedef
-      8.24. @uses
-      8.25. @var [deprecated]
-      8.26. @version
+      8.22. @typedef
+      8.23. @uses
+      8.24. @var [deprecated]
+      8.25. @version
     Appendix A. Types
     Appendix B. Differences Compared With The De-facto PHPDoc Standard
 
@@ -1679,10 +1679,11 @@ class Foo
 }
 ```
 
-### 8.23. @typedef
+### 8.22. @typedef
 
-Allows the author to define a custom type composed of one or more types that
-may be augmented with key definitions, properties or methods.
+Allows the author to define a new custom pseudo-type for use in PHPDoc blocks,
+which is composed of one or more types that may be augmented with key
+definitions, properties, or methods.
 
 #### Syntax
 
@@ -1690,100 +1691,87 @@ may be augmented with key definitions, properties or methods.
 
 #### Description
 
-Using the `@typedef` tag it is possible to define a new pseudo-type or 
-associative array definition for use in PHPDoc blocks.
+`@typedef` MAY be used in the following use-cases:
 
-Let's explain this concept by presenting the following use-cases:
+- Documenting the properties of a class that is dynamically constructed, such
+  as a `stdClass` created by `json_decode()`.
+- Documenting the keys and associated values of a configuration/options array.
+- Documenting a pseudo-type called `Scalar` commonly used by your code, which
+  represents either a string, boolean, float, or integer.
+- Inheriting the documentation of the original class when using `class_alias()`.
 
-1. You want to document the properties of a class that is dynamically 
-   constructed, such as the `\stdClass` coming from `json_decode`.
-2. You have a configuration array for which you want to document its keys and 
-   associated values.
-3. You consume a library with magic methods who does not implement the `@method`
-   tag but still want to document which methods are on it yourself.
-4. You want a pseudo-type called Scalar that represents either a string, float,
-   boolean or integer.
-5. You have used class_alias() to create an alias and want PHPDoc to know which
-   class it is based from so that methods and properties could be inherited.
+Custom pseudo-types defined via `@typedef` MUST be namespaced, in order to
+prevent name clashes between multiple code bases, clearly denote their origin,
+and MUST NOT conflict with actual PHP language constructs. Therefore, the
+following rules apply:
 
-The first parameter for the `@typedef` tag is the base "Type", 
-including compound types and collection classes, that is the defining "Type" 
-for the second parameter. The second parameter is used to name your pseudo-type, 
-and MUST be a Qualified Class Name.
+1. Each `@typedef` tag MUST be in a separate file.
+    * A single file MUST contain a single `@typedef` only.
+    * PHPDoc parsers MUST ignore all `@typedef` tags in case a single file
+      contains multiple `@typedef` tags.
+
+1. The `@typedef` tag MUST immediately follow a `namespace` declaration.
+    * PHPDoc parsers MUST ignore `@typedef` declarations without a namespace.
+    * PHPDoc parsers MUST ignore `@typedef` declarations in the global (empty)
+      namespace.
+
+1. A file that contains a `@typedef` MUST NOT contain any other PHP code (aside
+   from the namespace declaration).
+
+
+The first parameter is the native base "Type" of the pseudo-type.  This "Type"
+MAY consist of compound types or collection classes.
+
+The second parameter specifies the name of the pseudo-type, relative to the
+namespace for which it is declared.
+
+The third parameter is optional. The "Inline PHPDoc", augments the existing base
+"Type" specified in the first parameter.  This allows to document additional
+information for the preexisting, original "Type", using the `@property` and
+`@method` tags.
 
 The second parameter MAY be omitted, in which case an "Inline PHPDoc" MUST be
-defined. The information in the "Inline PHPDoc" will augment the existing base
-class. Using this mechanism it is possible to provide additional information
-with an existing class, such as methods or properties that could or were not
-documented in the original.
-
-It is also possible to combine multiple "Types" into a single pseudo-type by 
-using the pipe operator (`|`), the examples section contains an example of use.
-
-##### Location
-
-A `@typedef` tag MUST always be placed on a DocBlock that belongs to a File or 
-Class. 
-
-When associated with a File the type definition is considered to be 
-global and available throughout your project. It is NOT RECOMMENDED to use it
-in this fashion without due consideration as you are making your documentation
-harder to read without generator or IDE.
-
-Type definitions that are associated with a Class MUST only be used inside that
-class, or its descendants, and are considered to have a visibility similar to 
-protected.
-
-##### Adding methods and properties on objects
-
-It is also possible to add new properties or methods using an "Inline PHPDoc",
-and the `@property` and `@method` tags on any object. In this context an object
-is any Qualified Class Name (QCN) that does not match one of PHP's primitive 
-types. A notable exception is the 'object' keyword, which may have methods and 
-properties added onto it.
+defined.
 
 #### Examples
 
-##### Providing an alias for another class
+```php
+namespace My;
 
-An example may be that the `\Storage` class is aliased using the 
-`class_alias()` function as `\Session`, and the elements of the `\Session` 
-class must be documented. 
-
-The above can be accomplished with the following tag:
-
-    @typedef \Storage \Session
-
-##### Defining additional elements on an aliased class
-
-Here is an example where we add a property and a summary on the new `\Session`
-class.
-
-```
-@typedef \Storage \Session {
-  This class represents a session that stores user specific information.
-
-  @property string $session_id
-}
+/**
+ * @typedef \My\Storage Session {
+ *   Represents a session that stores user-specific information.
+ *
+ *   @property string $session_id
+ * }
+ *
+ * \My\Storage was aliased via class_alias() as \My\Session. This
+ * pseudo-type announces the alias, and documents magic properties.
+ */
 ```
 
-##### Combining multiple types into one
+```php
+namespace My\Space;
 
-An example of combining multiple types may be a class that is regularly 
-stubbed in unit tests:
-
-    @typedef \Mockery\MockInterface|\My\DiContainer DicStub
-
-The above example will construct a pseudo-type DicStub that combines the methods
-and properties of both the MockInterface and the DiContainer.
-
-##### Defining an associative array as pseudo-type
-
+/**
+ * @typedef \Mockery\MockInterface|\My\Space\DiContainer DicStub
+ *
+ * \My\Space\DicStub combines the methods and properties of both
+ * \Mockery\MockInterface and \My\Space\DiContainer.
+ */
 ```
-@typedef array \Configuration {
-  @type string $setting1
-  @type string $setting2
-}
+
+```php
+namespace App;
+
+/**
+ * @typedef array Configuration {
+ *   @type string $setting1
+ *   @type string $setting2
+ * }
+ *
+ * \App\Configuration documents an associative array.
+ */
 ```
 
 ### 8.24. @uses
@@ -1797,7 +1785,7 @@ Indicates whether the current "Structural Element" consumes the
 
 #### Description
 
-The `@uses` tag describes whether any part of the associated "Structural Element"
+The @uses tag describes whether any part of the associated "Structural Element"
 uses, or consumes, another "Structural Element" or a file that is situated in
 the current project.
 
@@ -1839,12 +1827,12 @@ function executeMyView()
 }
 ```
 
-### 8.25. @var [deprecated]
+### 8.24. @var [deprecated]
 
 The @var tag is **deprecated** in favor of `@type`. Please see the
 documentation for [@type](#822-type) for details of its usage.
 
-### 8.26. @version
+### 8.25. @version
 
 The @version tag is used to denote some description of "versioning" to an
 element.
