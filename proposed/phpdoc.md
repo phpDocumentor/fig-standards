@@ -1962,7 +1962,7 @@ A Type has the following [ABNF][RFC5234] definition:
     class-name       = ["\"] label *("\" label)
     label            = (ALPHA / %x7F-FF) *(ALPHA / DIGIT / %x7F-FF)
     keyword          = "array" / "bool" / "boolean" / "callable" / "double" / "false" / "float" / "int" / "integer"
-    keyword          =/ "mixed" / "null" / "object" / "resource" / "self" / "static" / "string" / "true" / "void"
+    keyword          =/ "mixed" / "null" / "object" / "resource" / "scalar" / "self" / "static" / "string" / "true" / "void"
     keyword          =/ "$this"
 
 ### Details
@@ -2073,15 +2073,19 @@ The following keywords are recognized by this PSR:
 5.  'object', the element to which this type applies is the instance of an
     undetermined class.
 
-6.  'mixed', the element to which this type applies can be of any type as
+6.  'scalar', the element to which this type applies can be of type 'boolean',
+    'float', 'integer', or 'string' as specified here. It is not known on
+    compile time which type will be used.
+
+7.  'mixed', the element to which this type applies can be of any type as
     specified here. It is not known on compile time which type will be used.
 
-7.  'array', the element to which this type applies is an array of values.
+8.  'array', the element to which this type applies is an array of values.
 
-8.  'resource', the element to which this type applies is a resource per
+9.  'resource', the element to which this type applies is a resource per
     the [definition of PHP][PHP_RESOURCE].
 
-9.  'void', this type is commonly only used when defining the return type of a
+10. 'void', this type is commonly only used when defining the return type of a
     method or function.
     The basic definition is that the element indicated with this type does not
     contain a value and the user should not rely on any retrieved value.
@@ -2118,7 +2122,7 @@ The following keywords are recognized by this PSR:
     value. Because there is no actual value specified, this also qualifies
     as type 'void'.
 
-10. 'null', the element to which this type applies is a NULL value or, in
+11. 'null', the element to which this type applies is a NULL value or, in
     technical terms, does not exist.
 
     A big difference compared to void is that this type is used in any situation
@@ -2155,15 +2159,15 @@ The following keywords are recognized by this PSR:
             return null;
         }
 
-11. 'callable', the element to which this type applies is a pointer to a
+12. 'callable', the element to which this type applies is a pointer to a
     function call. This may be any type of callable as defined in the PHP manual
     about [pseudo-types][PHP_PSEUDO] or the section on [callable][PHP_CALLABLE].
 
-12. 'false' or 'true', the element to which this type applies will have
+13. 'false' or 'true', the element to which this type applies will have
     the value true or false. No other value will be returned from this
     element.
 
-13. 'self', the element to which this type applies is of the same Class as
+14. 'self', the element to which this type applies is of the same Class as
     which the documented element is originally contained.
 
     For example:
@@ -2192,14 +2196,14 @@ The following keywords are recognized by this PSR:
     > with each representation of the class. This would make it obvious
     > for the user which classes are acceptable as type.
 
-14. 'static', the element to which this type applies is of the same Class as
+15. 'static', the element to which this type applies is of the same Class as
     which the documented element is contained, or when encountered in a
     subclass is of type of that subclass instead of the original class.
 
     This keyword behaves the same way as the 'static' keyword keyword (not
     the static property or method modifier) as defined by PHP.
 
-15. '$this', the element to which this type applies is the same exact instance
+16. '$this', the element to which this type applies is the same exact instance
     as the current Class in the given context. As such this type is a stricter
     version of 'static' as, in addition, the returned instance must not only
     be of the same Class but also the same instance.
