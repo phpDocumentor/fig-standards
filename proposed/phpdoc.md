@@ -47,6 +47,8 @@ PSR-5: PHPDoc
   - [8.23. @uses](#823-uses)
   - [8.24. @var](#824-var)
   - [8.25. @version](#825-version)
+  - [8.26. @template](#826-template)
+  - [8.26. @implements](#827-implements)
 - [Appendix A. Types](#appendix-a-types)
   - [ABFN](#abfn)
   - [Details](#details)
@@ -1959,6 +1961,108 @@ class Foo
 }
 ```
 
+### 8.26. @template
+
+You may use the @template tag to define template types ("type aliases") in [generic](#generics) class, interface
+and trait declarations.
+
+#### Syntax
+
+    @template [type_alias] [: <"Type">] [<description>]
+
+#### Description
+
+Type variables may be defined using @template in a class-level, interface-level or trait-level DocBlock - it defines
+a type alias, which may then be used in type-hints, to substitute another type, within the scope of the given DocBlock.
+
+Example: a generic class `Box<T>` is declared using the following syntax:
+
+    /**
+     * @template T the type of the value being boxed
+     */
+    class Box
+    {
+        /**
+         * @var T current value
+         */
+        private $value;
+
+        /**
+         * @param T $value new value
+         */
+        public function set($value)
+        {
+            $this->value = $value;
+        }
+
+        /**
+         * @return T current value
+         */
+        public function get()
+        {
+            return $this->value;
+        }
+    }
+
+The use of a generic may be type-hinted using e.g. `@var`:
+
+    /**
+     * @var Box<Hat> $boxed_hat
+     */
+
+    $boxed_hat = new Box();
+
+    // put the Hat in the Box:
+
+    $boxed_hat->set(new Hat());
+
+    // take the Hat out of the Box:
+
+    $hat = $boxed_hat->get();
+
+The section below describes the [@implements](#827-implements) tag, which may be used to derive a specialized
+type from a generic type.
+
+Providing a type constraint for a template type is also possible, using the optional `: T` syntax, e.g. a colon
+followed by a type expression. For example, the following defines a generic `Box<T>` class accepting only type
+arguments that extend a parent class `Model`:
+
+    /**
+     * @template TModel : Model
+     */
+    class Box<TModel>
+    {
+        // ...
+    }
+
+Note that any type expression will work as a constraint, including interfaces, traits, and generic types.
+
+### 8.27. @implements
+
+The @implements tag may be used to supply a type argument to a [generic](#generics) parent class, a generic interface,
+or a generic trait, previously declared by using the [@template](#826-template) tag.
+
+#### Syntax
+
+    @implements <"Type"> [<description>]
+
+#### Description
+
+Example: assuming a generic class `Hat<T>` (as per the [example given above](#826-template)) a specialized class
+explicitly supplying the type variable `T` can be defined as follows:
+
+    /**
+     * @implements Box<Hat>
+     */
+    class HatBox extends Box
+    {
+        // ...
+    }
+
+Note that the derived class in this example is not itself a generic class; there is no restriction, however, that
+prevents a derived type supplying a type argument from also declaring one or more template types - and also no
+restriction preventing a type argument from being filled with another type variable, as long as it is in scope.
+
 ## Appendix A. Types
 
 ### ABNF
@@ -1966,10 +2070,10 @@ class Foo
 A Type has the following [ABNF][RFC5234] definition:
 
     type-expression  = type *("|" type)
-    type             = class-name / keyword / array
-    array            = (type / array-expression) "[]" / generic
+    type             = class-name / keyword / array / generic
+    array            = (type / array-expression) "[]"
     array-expression = "(" type-expression ")"
-    generic          = collection-type "<" [type-expression "," *SP] type-expression ">"
+    generic          = generic-type "<" type-expression *("," type-expression) ">"
     collection-type  = class-name / "array"
     class-name       = ["\"] label *("\" label)
     label            = (ALPHA / %x7F-FF) *(ALPHA / DIGIT / %x7F-FF)
@@ -2005,34 +2109,93 @@ following options:
    Each value can be of any of the given types.
    Example: `@return (int|string)[]`
 
-4. specified using the Generics notation, see the next chapter "Collections" for a description on this notation.
+4. specified using the Generics notation, see the next chapter "Generics" for a description on this notation.
+
+### Generics
+
+Generic type notation is based on Generics syntax in Java. While PHP itself does not support generics, generic type
+relationships well may (and often do) exist between types in PHP code - these type relationships can be described
+using generic type notation, and a set of tags, as described below.
+
+The standard collection types (`array`, `ArrayObject` and `ArrayAccess`) have presumed ("ambient") generic counterparts,
+as defined in the [Collections](#collections) section below.
+
+The [@template](#826-template) tag may be used to define template types in a generic type declaration.
+
+The [@implements](#827-implements) tag may be used to explicitly specify type arguments when deriving a specialized
+type from a generic type.
+
+Generic type hints may be used anywhere, and may be nested, as per the ABNF above.
 
 #### Collections
 
-The value represented by "Type" can also be a [Collection][COLLECTION], a class that contains a list of keys with
-values. Collections can be denoted using a format derived from Generics in Java; as such aptly named Generics-style
-notation.
+The value represented by "Type" can specify various generic [Collection][COLLECTION] types, e.g. classes that implement
+a list, or a key/value map.
 
-With Generics-style notation it is REQUIRED to specify a class name, or the array keyword, followed by the type of
-the values enclosed with angular brackets.
+The following overloaded generic collection types are presumed ("ambient") in the global scope:
 
-Example: to indicate that this element returns an object of class ArrayObject that only contains a series of strings.
+    array<TIndex, TValue>
 
-    @return \ArrayObject<string>
+    array<TValue> = array<scalar, TValue>
 
-The type of the values in a Collection MAY be another array and even another Collection,
+    class ArrayObject<TIndex, TValue>
+
+    class ArrayObject<TValue> = ArrayObject<scalar, TValue>
+
+    interface Traversable<TIndex, TValue>
+
+    interface Traversable<TValue> = Traversable<scalar, TValue>
+
+    interface Iterator<TIndex, TValue> extends Traversable<TIndex, TValue> {
+        abstract public TValue  current()
+        abstract public TIndex  key()
+        abstract public void    next()
+        abstract public void    rewind()
+        abstract public boolean valid()
+    }
+
+    Iterator<TValue> = Iterator<scalar, TValue>
+
+    interface IteratorAggregate<TIndex, TValue> extends Traversable<TIndex, TValue> {
+        abstract public Traversable<TIndex, TValue> getIterator()
+    }
+
+    interface IteratorAggregate<TValue> = IteratorAggregate<scalar, TValue>
+
+    interface ArrayAccess<TIndex, TValue> {
+        abstract public boolean offsetExists(TIndex $offset)
+        abstract public TValue  offsetGet(TIndex $offset)
+        abstract public void    offsetSet(TIndex $offset, TValue $value)
+        abstract public void    offsetUnset(TIndex $offset)
+    }
+
+    interface ArrayAccess<TValue> = ArrayAccess<scalar, TValue>
+
+The `scalar` type in this context refers to any type usable as an array index, e.g. `int|string|float|bool`.
+
+These type definitions are overloaded, such that, when providing only one type argument, this is always the value
+type, and the index type is assumed to be scalar; for specific index types (e.g. generic map types) one must use
+the generic type definition with two type arguments.
+
+Examples:
+
+    /**
+     * @var array<string>        $foo an array of strings indexed numerically
+     * @var array<string,string> $bar a map of strings mapped to strings
+     */
+
+     $foo = array('foo', 'bar');
+
+     $bar = array('wham' => 'bat', 'biff' => 'qux');
+
+Note that, in type expressions, the `T[]` syntax is actually syntactic sugar, which expands to `array<T>` - for
+example, the type `(int|string)[]` is identical to `array<int|string>`.
+
+Type arguments may be nested - for example, the follow declares an array containing nested arrays of integers:
 
     @return \ArrayObject<\ArrayObject<int>>
 
-A Collection MAY optionally define the type of the keys of said Collection by adding an additional type definition
-between the angular brackets before the identifier denoting the values' type. These two should be separated by a comma.
-
-Example: to declare an ArrayObject collection containing a list of strings with integer keys.
-
-    @return \ArrayObject<int, string>
-
-The type of a value, or key, MAY consist of several different types, this can be represented by separating each
-individual type with a vertical bar sign between the angular brackets.
+Type arguments may consist of union types - for example, the following declares an array of strings or booleans:
 
     @return \ArrayObject<string|bool>
 
@@ -2049,6 +2212,11 @@ or an instance of a class that is a (sub-)child to the given class.
 > collect and shape this information to show a list of child classes
 > with each representation of the class. This would make it obvious
 > for the user which classes are acceptable as type.
+
+### Type Aliases
+
+Within the scope of a class, interface or trait with at least one [@template](#826-template) tag, [generic](#generics)
+type aliases may be used in place of class-names.
 
 ### Keyword
 
