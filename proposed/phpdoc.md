@@ -2134,13 +2134,15 @@ Generic type hints may be used anywhere, and may be nested, as per the ABNF abov
 The value represented by "Type" can specify various generic [Collection][COLLECTION] types, e.g. classes that implement
 a list, or a key/value map.
 
-The following overloaded generic collection types are presumed ("ambient") in the global scope:
+The relevant standard [predefined interfaces and classes](http://php.net/manual/en/reserved.interfaces.php), as well as the `array` pseudo-type, have been overloaded for documentation purposes, by introducing the following virtual generic collection types in the global scope:
 
-    array<TIndex, TValue>
+    array<TIndex, TValue> = Traversable<TIndex, TValue>
 
     array<TValue> = array<scalar, TValue>
 
-    class ArrayObject<TIndex, TValue>
+    class ArrayObject<TIndex, TValue> implements
+        IteratorAggregate<TIndex, TValue>,
+        ArrayAccess<TIndex, TValue>
 
     class ArrayObject<TValue> = ArrayObject<scalar, TValue>
 
