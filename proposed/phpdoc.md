@@ -52,7 +52,9 @@ PSR-5: PHPDoc
 - [Appendix A. Types](#appendix-a-types)
   - [ABFN](#abfn)
   - [Details](#details)
+  - [Generics](#generics)
   - [Valid Class Name](#valid-class-name)
+  - [Type Aliases](#type-aliases)
   - [Keyword](#keyword)
 - Appendix B. Differences Compared With The De-facto PHPDoc Standard
 
