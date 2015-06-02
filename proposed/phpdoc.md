@@ -2074,7 +2074,7 @@ A Type has the following [ABNF][RFC5234] definition:
     array            = (type / array-expression) "[]"
     array-expression = "(" type-expression ")"
     generic          = generic-type "<" type-expression *("," type-expression) ">"
-    collection-type  = class-name / "array"
+    generic-type     = class-name / "array"
     class-name       = ["\"] label *("\" label)
     label            = (ALPHA / %x7F-FF) *(ALPHA / DIGIT / %x7F-FF)
     keyword          = "array" / "bool" / "callable" / "false" / "float" / "int" / "mixed" / "null" / "object" /
