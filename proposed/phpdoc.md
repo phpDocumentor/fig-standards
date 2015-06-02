@@ -2147,11 +2147,11 @@ The following overloaded generic collection types are presumed ("ambient") in th
     interface Traversable<TValue> = Traversable<scalar, TValue>
 
     interface Iterator<TIndex, TValue> extends Traversable<TIndex, TValue> {
-        abstract public TValue  current()
-        abstract public TIndex  key()
-        abstract public void    next()
-        abstract public void    rewind()
-        abstract public boolean valid()
+        abstract public TValue current()
+        abstract public TIndex key()
+        abstract public void   next()
+        abstract public void   rewind()
+        abstract public bool   valid()
     }
 
     Iterator<TValue> = Iterator<scalar, TValue>
@@ -2163,10 +2163,10 @@ The following overloaded generic collection types are presumed ("ambient") in th
     interface IteratorAggregate<TValue> = IteratorAggregate<scalar, TValue>
 
     interface ArrayAccess<TIndex, TValue> {
-        abstract public boolean offsetExists(TIndex $offset)
-        abstract public TValue  offsetGet(TIndex $offset)
-        abstract public void    offsetSet(TIndex $offset, TValue $value)
-        abstract public void    offsetUnset(TIndex $offset)
+        abstract public bool   offsetExists(TIndex $offset)
+        abstract public TValue offsetGet(TIndex $offset)
+        abstract public void   offsetSet(TIndex $offset, TValue $value)
+        abstract public void   offsetUnset(TIndex $offset)
     }
 
     interface ArrayAccess<TValue> = ArrayAccess<scalar, TValue>
