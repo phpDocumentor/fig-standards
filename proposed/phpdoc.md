@@ -50,7 +50,7 @@ PSR-5: PHPDoc
   - [8.26. @template](#826-template)
   - [8.26. @implements](#827-implements)
 - [Appendix A. Types](#appendix-a-types)
-  - [ABFN](#abfn)
+  - [ABNF](#abnf)
   - [Details](#details)
   - [Generics](#generics)
   - [Valid Class Name](#valid-class-name)
