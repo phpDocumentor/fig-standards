@@ -2138,17 +2138,17 @@ The relevant standard [predefined interfaces and classes](http://php.net/manual/
 
     array<TIndex, TValue> = Traversable<TIndex, TValue>
 
-    array<TValue> = array<scalar, TValue>
+    array<TValue> = array<int|string, TValue>
 
     class ArrayObject<TIndex, TValue> implements
         IteratorAggregate<TIndex, TValue>,
         ArrayAccess<TIndex, TValue>
 
-    class ArrayObject<TValue> = ArrayObject<scalar, TValue>
+    class ArrayObject<TValue> = ArrayObject<int|string, TValue>
 
     interface Traversable<TIndex, TValue>
 
-    interface Traversable<TValue> = Traversable<scalar, TValue>
+    interface Traversable<TValue> = Traversable<int|string, TValue>
 
     interface Iterator<TIndex, TValue> extends Traversable<TIndex, TValue> {
         abstract public TValue current()
@@ -2158,13 +2158,13 @@ The relevant standard [predefined interfaces and classes](http://php.net/manual/
         abstract public bool   valid()
     }
 
-    Iterator<TValue> = Iterator<scalar, TValue>
+    Iterator<TValue> = Iterator<mixed, TValue>
 
     interface IteratorAggregate<TIndex, TValue> extends Traversable<TIndex, TValue> {
         abstract public Traversable<TIndex, TValue> getIterator()
     }
 
-    interface IteratorAggregate<TValue> = IteratorAggregate<scalar, TValue>
+    interface IteratorAggregate<TValue> = IteratorAggregate<mixed, TValue>
 
     interface ArrayAccess<TIndex, TValue> {
         abstract public bool   offsetExists(TIndex $offset)
@@ -2173,9 +2173,13 @@ The relevant standard [predefined interfaces and classes](http://php.net/manual/
         abstract public void   offsetUnset(TIndex $offset)
     }
 
-    interface ArrayAccess<TValue> = ArrayAccess<scalar, TValue>
+    interface ArrayAccess<TValue> = ArrayAccess<int|string, TValue>
 
-The `scalar` type in this context refers to any type usable as an array index, e.g. `int|string|float|bool`.
+Note that the default index-type `int|string` was chosen for the default type-definitions above -
+while, technically, any scalar value is allowed (e.g. `int|string|float|bool`), the type conversions
+associated with these are extremely haphazard and very rarely used in actual code. (in the exotic
+case where one does use e.g. `float` as an index, the index type can of course still be specified as
+`float`, at one's own risk.)
 
 These type definitions are overloaded, such that, when providing only one type argument, this is always the value
 type, and the index type is assumed to be scalar; for specific index types (e.g. generic map types) one must use
@@ -2184,7 +2188,7 @@ the generic type definition with two type arguments.
 Examples:
 
     /**
-     * @var array<string>        $foo an array of strings indexed numerically
+     * @var array<string>        $foo an array of strings indexed by int or string values
      * @var array<string,string> $bar a map of strings mapped to strings
      */
 
