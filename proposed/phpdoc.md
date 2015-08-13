@@ -2144,11 +2144,11 @@ The relevant standard [predefined interfaces and classes](http://php.net/manual/
         IteratorAggregate<TIndex, TValue>,
         ArrayAccess<TIndex, TValue>
 
-    class ArrayObject<TValue> = ArrayObject<int|string, TValue>
+    class ArrayObject<TValue> = ArrayObject<mixed, TValue>
 
     interface Traversable<TIndex, TValue>
 
-    interface Traversable<TValue> = Traversable<int|string, TValue>
+    interface Traversable<TValue> = Traversable<mixed, TValue>
 
     interface Iterator<TIndex, TValue> extends Traversable<TIndex, TValue> {
         abstract public TValue current()
@@ -2173,17 +2173,17 @@ The relevant standard [predefined interfaces and classes](http://php.net/manual/
         abstract public void   offsetUnset(TIndex $offset)
     }
 
-    interface ArrayAccess<TValue> = ArrayAccess<int|string, TValue>
-
-Note that the default index-type `int|string` was chosen for the default type-definitions above -
-while, technically, any scalar value is allowed (e.g. `int|string|float|bool`), the type conversions
-associated with these are extremely haphazard and very rarely used in actual code. (in the exotic
-case where one does use e.g. `float` as an index, the index type can of course still be specified as
-`float`, at one's own risk.)
+    interface ArrayAccess<TValue> = ArrayAccess<mixed, TValue>
 
 These type definitions are overloaded, such that, when providing only one type argument, this is always the value
-type, and the index type is assumed to be scalar; for specific index types (e.g. generic map types) one must use
+type, and the index type is assumed to be scalar; for specific index-types (e.g. generic map types) one must use
 the generic type definition with two type arguments.
+
+Note that the index-type `int|string` was chosen for native `array` and it's generic definitions.
+While, technically, any scalar value is allowed (e.g. `int|string|float|bool`), the type conversions
+associated with these are pretty risky and very rarely used in actual code. (In the exotic
+case where e.g. `float` is deliberately used as an index, the index type can of course still be
+specified as `float`, at one's own risk.)
 
 Examples:
 
