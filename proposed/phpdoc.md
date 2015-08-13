@@ -52,7 +52,7 @@ PSR-5: PHPDoc
   - [Details](#details)
   - [Valid Class Name](#valid-class-name)
   - [Keyword](#keyword)
-- Appendix B. Differences Compared With The De-facto PHPDoc Standard
+- [Appendix B. Differences](#appendix-b-differences) Compared With The De-facto PHPDoc Standard
 
 
 ## 1. Introduction
@@ -2224,6 +2224,11 @@ The following keywords are recognized by this PSR:
     of the same class but also the same instance.
 
     This type is often used as return value for methods implementing the [Fluent Interface][FLUENT] design pattern.
+
+## Appendix B. Differences Compared With The De-facto PHPDoc Standard
+
+ 1. De-facto standard PHPDoc used e.g. `@param string $names,...` to indicate variable number of parameters - in
+    PSR PHPDoc we use `@param ... string $names` to better align with the syntax used in most languages.
 
 [RFC2119]:      https://tools.ietf.org/html/rfc2119
 [RFC5234]:      https://tools.ietf.org/html/rfc5234
