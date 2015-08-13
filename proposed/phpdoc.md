@@ -1292,7 +1292,7 @@ The @param tag is used to document a single parameter of a function or method.
 
 #### Syntax
 
-    @param ["Type"] [name] [<description>]
+    @param [<...>] ["Type"] [name] [<description>]
 
 #### Description
 
@@ -1305,6 +1305,12 @@ RECOMMENDED to use an "Inline PHPDoc" to describe the option array.
 The @param tag MAY have a multi-line description and does not need explicit
 delimiting.
 
+The last @param tag for a given function MAY be prefixed with `...` to
+indicate an array whose elements are supplied by a variable remaining
+number of actual arguments passed to the function. The local variable
+(obtained as a slice from `func_get_args()`) inside the function SHOULD
+be named consistently with the parameter name used in the @param tag.
+
 It is RECOMMENDED when documenting to use this tag with every function and
 method. Exceptions to this recommendation are:
 
@@ -1313,11 +1319,13 @@ limited to "Structural Elements" of type method or function.
 
 #### Examples
 
+Basic usage:
+
 ```php
 /**
  * Counts the number of items in the provided array.
  *
- * @param mixed[] $array Array structure to count the elements of.
+ * @param mixed[] $items Array structure to count the elements of.
  *
  * @return int Returns the number of elements.
  */
@@ -1325,6 +1333,25 @@ function count(array $items)
 {
     <...>
 }
+```
+
+The following example demonstrates the use of `...` to indicate variable
+number of arguments:
+
+```php
+/**
+ * @param string $first
+ * @param string $second
+ * @param ... string $rest
+ */
+function call($first, $second) {
+    $args = func_get_args();
+    $rest = array_slice($args, 2);
+    echo "first: {$first}, second: {$second}, rest: " . implode(', ', $rest);
+}
+
+call("hello", "world", "one", "two", "three");
+// => first: hello, second: world, rest: one, two, three
 ```
 
 The following example demonstrates the use of an "Inline PHPDoc" to document
