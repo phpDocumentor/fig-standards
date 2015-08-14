@@ -716,6 +716,28 @@ public function __construct(array $options = array())
 }
 ```
 
+### Required options
+
+The asterisk (*) char can be used to indicate a required option. The char suffices the variable name.
+
+Example:
+
+```php
+/**
+ * Initializes this class with the given options.
+ *
+ * @param array $options {
+ *     @type int $id* The element's id
+ *     @type boolean $required Whether this element is required
+ *     @type string  $label    The display name for this element
+ * }
+ */
+public function __construct(array $options = array())
+{
+    <...>
+}
+```
+
 ### As @struct declaration
 
 In some cases a hash should be documented multiple times in the same class. For
