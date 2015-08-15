@@ -1312,7 +1312,7 @@ number of actual arguments passed to the function. The local variable
 be named consistently with the parameter name used in the @param tag.
 
 It is RECOMMENDED when documenting to use this tag with every function and
-method. Exceptions to this recommendation are:
+method.
 
 This tag MUST NOT occur more than once per parameter in a "PHPDoc" and is
 limited to "Structural Elements" of type method or function.
@@ -1355,7 +1355,7 @@ call("hello", "world", "one", "two", "three");
 ```
 
 The following example demonstrates the use of an "Inline PHPDoc" to document
-an option array with 2 elements: 'required' and 'label'.
+an option array with two elements: 'required' and 'label'.
 
 ```php
 /**
@@ -1533,7 +1533,7 @@ The @since tag SHOULD NOT be used to show the current version of an element, the
 ```php
 /**
  * This is Foo
- * @version MyApp 2.1.7
+ * @version 2.1.7 MyApp
  * @since 2.0.0 introduced
  */
 class Foo
