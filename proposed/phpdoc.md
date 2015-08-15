@@ -1965,8 +1965,10 @@ class Foo
 
 ### 8.26. @template
 
-You may use the @template tag to define template types ("type aliases") in [generic](#generics) class, interface
+You may use the @template tag to define template types ("type aliases") in [generic](#generics) classes, interfaces
 and trait declarations.
+
+As a convention, type aliases SHOULD start with a capital T followed by a descriptive name in camel-case, e.g. `TValue`, `TKey`, `TEntity`, etc. - alternatively, a single `T` may be used in cases with a single, non-descript, unconstrained type alias.
 
 #### Syntax
 
