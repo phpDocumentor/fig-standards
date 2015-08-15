@@ -2138,23 +2138,23 @@ a list, or a key/value map.
 
 The relevant standard [predefined interfaces and classes](http://php.net/manual/en/reserved.interfaces.php), as well as the `array` pseudo-type, have been overloaded for documentation purposes, by introducing the following virtual generic collection types in the global scope:
 
-    array<TIndex, TValue> = Traversable<TIndex, TValue>
+    array<TKey, TValue> = Traversable<TKey, TValue>
 
     array<TValue> = array<int|string, TValue>
 
-    class ArrayObject<TIndex, TValue> implements
-        IteratorAggregate<TIndex, TValue>,
-        ArrayAccess<TIndex, TValue>
+    class ArrayObject<TKey, TValue> implements
+        IteratorAggregate<TKey, TValue>,
+        ArrayAccess<TKey, TValue>
 
     class ArrayObject<TValue> = ArrayObject<mixed, TValue>
 
-    interface Traversable<TIndex, TValue>
+    interface Traversable<TKey, TValue>
 
     interface Traversable<TValue> = Traversable<mixed, TValue>
 
-    interface Iterator<TIndex, TValue> extends Traversable<TIndex, TValue> {
+    interface Iterator<TKey, TValue> extends Traversable<TKey, TValue> {
         abstract public TValue current()
-        abstract public TIndex key()
+        abstract public TKey key()
         abstract public void   next()
         abstract public void   rewind()
         abstract public bool   valid()
@@ -2162,17 +2162,17 @@ The relevant standard [predefined interfaces and classes](http://php.net/manual/
 
     Iterator<TValue> = Iterator<mixed, TValue>
 
-    interface IteratorAggregate<TIndex, TValue> extends Traversable<TIndex, TValue> {
-        abstract public Traversable<TIndex, TValue> getIterator()
+    interface IteratorAggregate<TKey, TValue> extends Traversable<TKey, TValue> {
+        abstract public Traversable<TKey, TValue> getIterator()
     }
 
     interface IteratorAggregate<TValue> = IteratorAggregate<mixed, TValue>
 
-    interface ArrayAccess<TIndex, TValue> {
-        abstract public bool   offsetExists(TIndex $offset)
-        abstract public TValue offsetGet(TIndex $offset)
-        abstract public void   offsetSet(TIndex $offset, TValue $value)
-        abstract public void   offsetUnset(TIndex $offset)
+    interface ArrayAccess<TKey, TValue> {
+        abstract public bool   offsetExists(TKey $offset)
+        abstract public TValue offsetGet(TKey $offset)
+        abstract public void   offsetSet(TKey $offset, TValue $value)
+        abstract public void   offsetUnset(TKey $offset)
     }
 
     interface ArrayAccess<TValue> = ArrayAccess<mixed, TValue>
