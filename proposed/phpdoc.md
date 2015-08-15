@@ -48,7 +48,7 @@ PSR-5: PHPDoc
   - [8.24. @var](#824-var)
   - [8.25. @version](#825-version)
   - [8.26. @template](#826-template)
-  - [8.26. @implements](#827-implements)
+  - [8.27. @implements](#827-implements)
 - [Appendix A. Types](#appendix-a-types)
   - [ABNF](#abnf)
   - [Details](#details)
