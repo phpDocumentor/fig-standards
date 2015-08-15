@@ -1292,7 +1292,7 @@ The @param tag is used to document a single parameter of a function or method.
 
 #### Syntax
 
-    @param [<...>] ["Type"] [name] [<description>]
+    @param ["Type"] [<...>][name] [<description>]
 
 #### Description
 
@@ -1305,9 +1305,13 @@ RECOMMENDED to use an "Inline PHPDoc" to describe the option array.
 The @param tag MAY have a multi-line description and does not need explicit
 delimiting.
 
-The last @param tag for a given function MAY be prefixed with `...` to
-indicate an array whose elements are supplied by a variable remaining
-number of actual arguments passed to the function. The local variable
+The last @param tag for a given function MAY use a `...` prefix immediately
+before the variable name, to indicate the use of *variadics* (as per the
+[variadics RFC](https://wiki.php.net/rfc/variadics) supported in PHP 5.6
+and later) - e.g. an array whose elements are supplied by a variable
+remaining number of actual arguments passed to the function.
+
+In PHP code intended to support PHP versions before 5.6, the local variable
 (obtained as a slice from `func_get_args()`) inside the function SHOULD
 be named consistently with the parameter name used in the @param tag.
 
