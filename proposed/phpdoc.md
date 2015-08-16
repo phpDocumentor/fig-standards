@@ -228,7 +228,7 @@ interpreted as described in [RFC 2119][RFC2119].
       FUNCTION = FQCN [ "::" NAME ] "()"
       VARIABLE = FQCN "::$" NAME
       CONSTANT = FQCN "::" NAME
-      FQCN     = 1*( "\" [ NAME ] )
+      FQCN     = 1*( "\" NAME )
       
       NAME     = ( ALPHA / "_" ) *( ALPHA / DIGIT / "_" )
 
@@ -239,7 +239,7 @@ interpreted as described in [RFC 2119][RFC2119].
         (?<FUNCTION>(?&FQCN)(?:::(?&NAME))?\(\))
         (?<VARIABLE>(?&FQCN)::\$(?&NAME))
         (?<CONSTANT>(?&FQCN)::(?&NAME))
-        (?<FQCN>(?:\\(?&NAME)+)+)
+        (?<FQCN>(?:\\(?&NAME))+)
         (?<NAME>[[:alnum:]_]+)
       )
       ^(?&FQSEN)$/ix
