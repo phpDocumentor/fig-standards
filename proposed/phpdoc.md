@@ -203,7 +203,7 @@ interpreted as described in [RFC 2119][RFC2119].
 * "Semantic Version" refers to the definition as set in the [Semantic Versioning
   Specification 2.0.0][SEMVER2].
 
-* “FQSEN” is an abbreviation for Fully Qualified Structural Element Name. This
+* “FQSEN” is an acronym for Fully Qualified Structural Element Name. This
   notation expands on the Fully Qualified Class Name (FQCN) and adds a notation
   to identify class/interface/trait members and re-apply the principles of the
   FQCN to interfaces, traits, functions, and global constants.
@@ -220,8 +220,8 @@ interpreted as described in [RFC 2119][RFC2119].
   * *Property*:       `\My\Space\MyClass::$my_property`
   * *Class Constant*: `\My\Space\MyClass::MY_CONSTANT`
 
-  A FQSEN has the following [Augmented Backus–Naur Form (ABNF)][RFC5234]
-  definition:
+  A FQSEN has the following definition given in
+  [Augmented Backus–Naur Form (ABNF)][RFC5234]:
 
       FQSEN     = FUNCTION / VARIABLE / CONSTANT / NAMESPACE
       
@@ -249,9 +249,10 @@ interpreted as described in [RFC 2119][RFC2119].
   for compatibility reasons, even though PHP allows the usage of arbitrary
   characters. This is because different character encodings result in different
   characters for the same code point. Restricting the range to the previously
-  mentioned range lowers compatibility issues. However, some character encodings
-  even map different characters to the ASCII code points. It is thus highly
-  RECOMMENDED to work in ASCII and/or UTF-8 only to ensure highest compatibility.
+  mentioned characters lowers compatibility issues. However, some character
+  encodings even map different characters to the ASCII code points. It is thus
+  highly RECOMMENDED to work in ASCII and/or UTF-8 only to ensure highest
+  compatibility.
 
 ## 4. Basic Principles
 
