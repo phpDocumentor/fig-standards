@@ -48,7 +48,7 @@ PSR-5: PHPDoc
   - [8.24. @var](#824-var)
   - [8.25. @version](#825-version)
   - [8.26. @template](#826-template)
-  - [8.27. @implements](#827-implements)
+  - [8.27. @extends](#827-extends)
 - [Appendix A. Types](#appendix-a-types)
   - [ABNF](#abnf)
   - [Details](#details)
@@ -2024,7 +2024,7 @@ The use of a generic may be type-hinted using e.g. `@var`:
 
     $hat = $boxed_hat->get();
 
-The section below describes the [@implements](#827-implements) tag, which may be used to derive a specialized
+The section below describes the [@extends](#827-extends) tag, which may be used to derive a specialized
 type from a generic type.
 
 Providing a type constraint for a template type is also possible, using the optional `: T` syntax, e.g. a colon
@@ -2041,14 +2041,14 @@ arguments that extend a parent class `Model`:
 
 Note that any type expression will work as a constraint, including interfaces, traits, and generic types.
 
-### 8.27. @implements
+### 8.27. @extends
 
-The @implements tag may be used to supply a type argument to a [generic](#generics) parent class, a generic interface,
+The @extends tag may be used to supply a type argument to a [generic](#generics) parent class, a generic interface,
 or a generic trait, previously declared by using the [@template](#826-template) tag.
 
 #### Syntax
 
-    @implements <"Type"> [<description>]
+    @extends <"Type"> [<description>]
 
 #### Description
 
@@ -2056,7 +2056,7 @@ Example: assuming a generic class `Hat<T>` (as per the [example given above](#82
 explicitly supplying the type variable `T` can be defined as follows:
 
     /**
-     * @implements Box<Hat>
+     * @extends Box<Hat>
      */
     class HatBox extends Box
     {
@@ -2126,7 +2126,7 @@ as defined in the [Collections](#collections) section below.
 
 The [@template](#826-template) tag may be used to define template types in a generic type declaration.
 
-The [@implements](#827-implements) tag may be used to explicitly specify type arguments when deriving a specialized
+The [@extends](#827-extends) tag may be used to explicitly specify type arguments when deriving a specialized
 type from a generic type.
 
 Generic type hints may be used anywhere, and may be nested, as per the ABNF above.
