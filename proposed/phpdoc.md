@@ -2043,8 +2043,9 @@ Note that any type expression will work as a constraint, including interfaces, t
 
 ### 8.27. @extends
 
-The @extends tag may be used to supply a type argument to a [generic](#generics) parent class, a generic interface,
-or a generic trait, previously declared by using the [@template](#826-template) tag.
+The @extends tag may be used to define inheritance from a [generic](#generics) or [virtual](#822-typedef) class,
+interface or trait. This tag can be used to supply type arguments to template types, e.g. defined elsewhere in
+a generic type with [@template](#826-template) tags.
 
 #### Syntax
 
@@ -2053,7 +2054,7 @@ or a generic trait, previously declared by using the [@template](#826-template) 
 #### Description
 
 Example: assuming a generic class `Hat<T>` (as per the [example given above](#826-template)) a specialized class
-explicitly supplying the type variable `T` can be defined as follows:
+explicitly supplying the template type `T` can be defined as follows:
 
     /**
      * @extends Box<Hat>
