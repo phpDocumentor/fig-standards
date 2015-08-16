@@ -240,7 +240,7 @@ interpreted as described in [RFC 2119][RFC2119].
         (?<VARIABLE>(?&FQCN)::\$(?&NAME))
         (?<CONSTANT>(?&FQCN)::(?&NAME))
         (?<FQCN>(?:\\(?&NAME))+)
-        (?<NAME>[[:alnum:]_]+)
+        (?<NAME>[[:alpha:]_][[:alnum:]_]*)
       )
       ^(?&FQSEN)$/ix
 
