@@ -203,34 +203,55 @@ interpreted as described in [RFC 2119][RFC2119].
 * "Semantic Version" refers to the definition as set in the [Semantic Versioning
   Specification 2.0.0][SEMVER2].
 
-* "FQSEN" is an abbreviation for Fully Qualified Structural Element Name. This
-  notation expands on the Fully Qualified Class Name and adds a notation to
-  identify class/interface/trait members and re-apply the principles of the FQCN
-  to Interfaces, Traits, Functions and global Constants.
+* “FQSEN” is an abbreviation for Fully Qualified Structural Element Name. This
+  notation expands on the Fully Qualified Class Name (FQCN) and adds a notation
+  to identify class/interface/trait members and re-apply the principles of the
+  FQCN to interfaces, traits, functions, and global constants.
 
-  The following notations can be used per type of "Structural Element":
+  The following notations can be used per type of “Structural Element”:
 
-  *Namespace*:      `\My\Space`
-  *Function*:       `\My\Space\myFunction()`
-  *Constant*:       `\My\Space\MY_CONSTANT`
-  *Class*:          `\My\Space\MyClass`
-  *Interface*:      `\My\Space\MyInterface`
-  *Trait*:          `\My\Space\MyTrait`
-  *Method*:         `\My\Space\MyClass::myMethod()`
-  *Property*:       `\My\Space\MyClass::$my_property`
-  *Class Constant*: `\My\Space\MyClass::MY_CONSTANT`
+  * *Namespace*:      `\My\Space`
+  * *Function*:       `\My\Space\myFunction()`
+  * *Constant*:       `\My\Space\MY_CONSTANT`
+  * *Class*:          `\My\Space\MyClass`
+  * *Interface*:      `\My\Space\MyInterface`
+  * *Trait*:          `\My\Space\MyTrait`
+  * *Method*:         `\My\Space\MyClass::myMethod()`
+  * *Property*:       `\My\Space\MyClass::$my_property`
+  * *Class Constant*: `\My\Space\MyClass::MY_CONSTANT`
 
-  A FQSEN has the following [ABNF][RFC5234]
+  A FQSEN has the following [Augmented Backus–Naur Form (ABNF)][RFC5234]
   definition:
 
-          FQSEN    = fqnn / fqcn / constant / method / property  / function
-          fqnn     = "\" [name] *("\" [name])
-          fqcn     = fqnn "\" name
-          constant = (fqnn "\" / fqcn "::") name
-          method   = fqcn "::" name "()"
-          property = fqcn "::$" name
-          function = fqnn "\" name "()"
-          name     = (ALPHA / "_") *(ALPHA / DIGIT / "_")
+      FQSEN     = FUNCTION / VARIABLE / CONSTANT / NAMESPACE
+      
+      FUNCTION  = NAMESPACE [ "::" NAME ] "()"
+      VARIABLE  = NAMESPACE "::$" NAME
+      CONSTANT  = NAMESPACE "::" NAME
+      NAMESPACE = 1*( "\" [ NAME ] )
+      
+      NAME      = ( ALPHA / "_" ) *( ALPHA / DIGIT / "_" )
+
+  An equivalent regular expression of the ABNF for PHP:
+
+      /(?(DEFINE)
+        (?<FQSEN>(?:(?&FUNCTION)|(?&VARIABLE)|(?&CONSTANT)|(?&NAMESPACE)))
+        (?<FUNCTION>(?&NAMESPACE)(?:::(?&NAME))?\(\))
+        (?<VARIABLE>(?&NAMESPACE)::\$(?&NAME))
+        (?<CONSTANT>(?&NAMESPACE)::(?&NAME))
+        (?<NAMESPACE>(?:\\(?&NAME)+)+)
+        (?<NAME>[[:alnum:]_]+)
+      )
+      ^(?&FQSEN)$/ix
+
+  The ABNF restricts all structural element names to alphanumeric ASCII
+  characters (`A-Z`, `a-z`, and `0-9`) plus backslash (`\`) and underscore (`_`)
+  for compatibility reasons, even though PHP allows the usage of arbitrary
+  characters. This is because different character encodings result in different
+  characters for the same code point. Restricting the range to the previously
+  mentioned range lowers compatibility issues. However, some character encodings
+  even map different characters to the ASCII code points. It is thus highly
+  RECOMMENDED to work in ASCII and/or UTF-8 only to ensure highest compatibility.
 
 ## 4. Basic Principles
 
