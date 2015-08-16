@@ -204,9 +204,9 @@ interpreted as described in [RFC 2119][RFC2119].
   Specification 2.0.0][SEMVER2].
 
 * “FQSEN” is an acronym for Fully Qualified Structural Element Name. This
-  notation expands on the Fully Qualified Class Name (FQCN) and adds a notation
-  to identify class/interface/trait members and re-apply the principles of the
-  FQCN to interfaces, traits, functions, and global constants.
+  notation expands on the [Fully Qualified Class Name (FQCN)][PHP_FQCN] and adds
+  a notation to identify class/interface/trait members and re-apply the
+  principles of the FQCN to interfaces, traits, functions, and global constants.
 
   The following notations can be used per type of “Structural Element”:
 
@@ -2224,6 +2224,7 @@ The following keywords are recognized by this PSR:
 [RFC5234]:      https://tools.ietf.org/html/rfc5234
 [RFC2396]:      https://tools.ietf.org/html/rfc2396
 [SEMVER2]:      http://www.semver.org
+[PHP_FQCN]:     https://php.net/language.namespaces.rules
 [PHP_SUBSTR]:   https://php.net/manual/function.substr.php
 [PHP_RESOURCE]: https://php.net/manual/language.types.resource.php
 [PHP_PSEUDO]:   https://php.net/manual/language.pseudo-types.php
