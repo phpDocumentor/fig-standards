@@ -223,23 +223,23 @@ interpreted as described in [RFC 2119][RFC2119].
   A FQSEN has the following definition given in
   [Augmented Backus–Naur Form (ABNF)][RFC5234]:
 
-      FQSEN     = FUNCTION / VARIABLE / CONSTANT / NAMESPACE
+      FQSEN    = FUNCTION / VARIABLE / CONSTANT / FQCN
       
-      FUNCTION  = NAMESPACE [ "::" NAME ] "()"
-      VARIABLE  = NAMESPACE "::$" NAME
-      CONSTANT  = NAMESPACE "::" NAME
-      NAMESPACE = 1*( "\" [ NAME ] )
+      FUNCTION = FQCN [ "::" NAME ] "()"
+      VARIABLE = FQCN "::$" NAME
+      CONSTANT = FQCN "::" NAME
+      FQCN     = 1*( "\" [ NAME ] )
       
-      NAME      = ( ALPHA / "_" ) *( ALPHA / DIGIT / "_" )
+      NAME     = ( ALPHA / "_" ) *( ALPHA / DIGIT / "_" )
 
   An equivalent regular expression of the ABNF for PHP:
 
       /(?(DEFINE)
-        (?<FQSEN>(?:(?&FUNCTION)|(?&VARIABLE)|(?&CONSTANT)|(?&NAMESPACE)))
-        (?<FUNCTION>(?&NAMESPACE)(?:::(?&NAME))?\(\))
-        (?<VARIABLE>(?&NAMESPACE)::\$(?&NAME))
-        (?<CONSTANT>(?&NAMESPACE)::(?&NAME))
-        (?<NAMESPACE>(?:\\(?&NAME)+)+)
+        (?<FQSEN>(?:(?&FUNCTION)|(?&VARIABLE)|(?&CONSTANT)|(?&FQCN)))
+        (?<FUNCTION>(?&FQCN)(?:::(?&NAME))?\(\))
+        (?<VARIABLE>(?&FQCN)::\$(?&NAME))
+        (?<CONSTANT>(?&FQCN)::(?&NAME))
+        (?<FQCN>(?:\\(?&NAME)+)+)
         (?<NAME>[[:alnum:]_]+)
       )
       ^(?&FQSEN)$/ix
