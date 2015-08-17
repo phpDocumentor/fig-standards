@@ -1398,7 +1398,7 @@ An optional read or write suffix may be used to indicate asynchronous properties
 that is, you may use @property-read to define a read-only property, or (in rare cases)
 @property-write to define a write-only property.
 
-@property tags MUST NOT be used in a doc-block that is not associated with
+@property tags MUST NOT be used in a "PHPDoc" that is not associated with
 a *class*, *trait* or *interface*.
 
 #### Examples
