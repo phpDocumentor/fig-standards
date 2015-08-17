@@ -223,26 +223,26 @@ interpreted as described in [RFC 2119][RFC2119].
   A FQSEN has the following definition given in
   [Augmented Backus–Naur Form (ABNF)][RFC5234]:
 
-      FQSEN    = FUNCTION / VARIABLE / CONSTANT / FQCN
+      FQSEN    = FUNCTION / PROPERTY / CONSTANT / FQN
       
-      FUNCTION = FQCN [ "::" NAME ] "()"
-      VARIABLE = FQCN "::$" NAME
-      CONSTANT = FQCN "::" NAME
-      FQCN     = 1*( "\" NAME )
+      FUNCTION = FQN [ "::" NAME ] "()"
+      PROPERTY = FQN "::$" NAME
+      CONSTANT = FQN "::" NAME
+      FQN     = 1*( "\" NAME )
       
       NAME     = ( ALPHA / "_" ) *( ALPHA / DIGIT / "_" )
 
   An equivalent regular expression of the ABNF for PHP:
 
       /(?(DEFINE)
-        (?<FQSEN>(?:(?&FUNCTION)|(?&VARIABLE)|(?&CONSTANT)|(?&FQCN)))
-        (?<FUNCTION>(?&FQCN)(?:::(?&NAME))?\(\))
-        (?<VARIABLE>(?&FQCN)::\$(?&NAME))
-        (?<CONSTANT>(?&FQCN)::(?&NAME))
-        (?<FQCN>(?:\\(?&NAME))+)
+        (?<FQSEN>(?:(?&FUNCTION)|(?&VARIABLE)|(?&CONSTANT)|(?&FQN)))
+        (?<FUNCTION>(?&FQN)(?:::(?&NAME))?\(\))
+        (?<VARIABLE>(?&FQN)::\$(?&NAME))
+        (?<CONSTANT>(?&FQN)::(?&NAME))
+        (?<FQN>(?:\\(?&NAME))+)
         (?<NAME>[[:alpha:]_][[:alnum:]_]*)
       )
-      ^(?&FQSEN)$/ix
+      ^(?&FQSEN)$/x
 
   The ABNF restricts all structural element names to alphanumeric ASCII
   characters (`A-Z`, `a-z`, and `0-9`) plus backslash (`\`) and underscore (`_`)
