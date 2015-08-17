@@ -227,10 +227,10 @@ interpreted as described in [RFC 2119][RFC2119].
       
       FUNCTION = FQN [ "::" NAME ] "()"
       PROPERTY = FQN "::$" NAME
-      CONSTANT = FQN "::" NAME
+      CONSTANT = FQN [ "::" NAME ]
       FQN     = 1*( "\" NAME )
       
-      NAME     = ( ALPHA / "_" ) *( ALPHA / DIGIT / "_" )
+      NAME     = ( ALPHA / "_" / %x7F-FF ) *( ALPHA / DIGIT / "_" / %x7F-FF )
 
   An equivalent regular expression of the ABNF for PHP:
 
@@ -240,18 +240,14 @@ interpreted as described in [RFC 2119][RFC2119].
         (?<VARIABLE>(?&FQN)::\$(?&NAME))
         (?<CONSTANT>(?&FQN)::(?&NAME))
         (?<FQN>(?:\\(?&NAME))+)
-        (?<NAME>[[:alpha:]_][[:alnum:]_]*)
+        (?<NAME>[[:alpha:]_\x7f-\xff][[:alnum:]_\x7f-\xff]*)
       )
       ^(?&FQSEN)$/x
 
-  The ABNF restricts all structural element names to alphanumeric ASCII
-  characters (`A-Z`, `a-z`, and `0-9`) plus backslash (`\`) and underscore (`_`)
-  for compatibility reasons, even though PHP allows the usage of arbitrary
-  characters. This is because different character encodings result in different
-  characters for the same code point. Restricting the range to the previously
-  mentioned characters lowers compatibility issues. However, some character
-  encodings even map different characters to the ASCII code points. It is thus
-  highly RECOMMENDED to work in ASCII and/or UTF-8 only to ensure highest
+  The ABNF restricts all structural element names to the byte range that is
+  given in the [basics PHP manual page][PHP_BASICS]. However, it is highly
+  RECOMMENDED to adhere to best practices and work with ASCII letters (`A-Z` and
+  `a-z`), numbers (`0-9`), as well as underscores (`_`) only to ensure highest
   compatibility.
 
 ## 4. Basic Principles
