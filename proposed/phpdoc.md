@@ -47,12 +47,16 @@ PSR-5: PHPDoc
   - [8.23. @uses](#823-uses)
   - [8.24. @var](#824-var)
   - [8.25. @version](#825-version)
+  - [8.26. @template](#826-template)
+  - [8.27. @implements](#827-implements)
 - [Appendix A. Types](#appendix-a-types)
-  - [ABFN](#abfn)
+  - [ABNF](#abnf)
   - [Details](#details)
+  - [Generics](#generics)
   - [Valid Class Name](#valid-class-name)
+  - [Type Aliases](#type-aliases)
   - [Keyword](#keyword)
-- Appendix B. Differences Compared With The De-facto PHPDoc Standard
+- [Appendix B. Differences](#appendix-b-differences) Compared With The De-facto PHPDoc Standard
 
 
 ## 1. Introduction
@@ -1292,7 +1296,7 @@ The @param tag is used to document a single parameter of a function or method.
 
 #### Syntax
 
-    @param ["Type"] [name] [<description>]
+    @param ["Type"] [<...>][name] [<description>]
 
 #### Description
 
@@ -1305,6 +1309,16 @@ RECOMMENDED to use an "Inline PHPDoc" to describe the option array.
 The @param tag MAY have a multi-line description and does not need explicit
 delimiting.
 
+The last @param tag for a given function MAY use a `...` prefix immediately
+before the variable name, to indicate the use of *variadics* (as per the
+[variadics RFC](https://wiki.php.net/rfc/variadics) supported in PHP 5.6
+and later) - e.g. an array whose elements are supplied by a variable
+remaining number of actual arguments passed to the function.
+
+In PHP code intended to support PHP versions before 5.6, the local variable
+(obtained as a slice from `func_get_args()`) inside the function SHOULD
+be named consistently with the parameter name used in the @param tag.
+
 It is RECOMMENDED when documenting to use this tag with every function and
 method.
 
@@ -1312,6 +1326,8 @@ This tag MUST NOT occur more than once per parameter in a "PHPDoc" and is
 limited to "Structural Elements" of type method or function.
 
 #### Examples
+
+Basic usage:
 
 ```php
 /**
@@ -1325,6 +1341,25 @@ function count(array $items)
 {
     <...>
 }
+```
+
+The following example demonstrates the use of `...` to indicate variable
+number of arguments:
+
+```php
+/**
+ * @param string $first
+ * @param string $second
+ * @param ... string $rest
+ */
+function call($first, $second) {
+    $args = func_get_args();
+    $rest = array_slice($args, 2);
+    echo "first: {$first}, second: {$second}, rest: " . implode(', ', $rest);
+}
+
+call("hello", "world", "one", "two", "three");
+// => first: hello, second: world, rest: one, two, three
 ```
 
 The following example demonstrates the use of an "Inline PHPDoc" to document
@@ -1347,43 +1382,48 @@ public function __construct(array $options = array())
 
 ### 8.14. @property
 
-The @property tag allows a class to know which 'magic' properties are present.
+The @property tag allows a class to know which "magic" properties are supported.
 
 #### Syntax
 
-    @property ["Type"] [name] [<description>]
+    @property[<-read|-write>] ["Type"] [name] [<description>]
 
 #### Description
 
-The @property tag is used in the situation where a class contains the
-`__get()` and `__set()` magic methods and allows for specific names.
+The @property tag is used in the situation where a class (or trait) implements the
+`__get()` and `__set()` magic methods as a means of supporting "virtual" properties
+or "accessors", e.g. properties that get resolved at run-time.
 
-An example of this is a child class whose parent has a `__get()`. The child
-knows which properties need to be present but relies on the parent class to use the
-`__get()` method to provide it.
-In this situation, the child class would have a @property tag for each magic
-property.
+An optional read or write suffix may be used to indicate asynchronous properties -
+that is, you may use @property-read to define a read-only property, or (in rare cases)
+@property-write to define a write-only property.
 
-@property tags MUST NOT be used in a "PHPDoc" that is not associated with
-a *class* or *interface*.
+@property tags MUST NOT be used in a doc-block that is not associated with
+a *class*, *trait* or *interface*.
 
 #### Examples
 
-```php
-class Parent
-{
-    public function __get()
-    {
-        <...>
-    }
-}
+In the following example, a class `User` implements the magic `__get()` method, in
+order to implement a virtual, read-only `$full_name` property.
 
+```php
 /**
- * @property string $myProperty
+ * @property-read string $full_name
  */
-class Child extends Parent
+class User
 {
-    <...>
+    /** @var string */
+    public $first_name;
+    
+    /** @var string */
+    public $last_name;
+
+    public function __get($name)
+    {
+        if ($name === "full_name") {
+            return "{$this->first_name} {$this->last_name}";
+        }
+    }
 }
 ```
 
@@ -1959,6 +1999,110 @@ class Foo
 }
 ```
 
+### 8.26. @template
+
+You may use the @template tag to define template types ("type aliases") in [generic](#generics) classes, interfaces
+and trait declarations.
+
+As a convention, type aliases SHOULD start with a capital T followed by a descriptive name in camel-case, e.g. `TValue`, `TKey`, `TEntity`, etc. - alternatively, a single `T` may be used in cases with a single, non-descript, unconstrained type alias.
+
+#### Syntax
+
+    @template [type_alias] [: <"Type">] [<description>]
+
+#### Description
+
+Type variables may be defined using @template in a class-level, interface-level or trait-level DocBlock - it defines
+a type alias, which may then be used in type-hints, to substitute another type, within the scope of the given DocBlock.
+
+Example: a generic class `Box<T>` is declared using the following syntax:
+
+    /**
+     * @template T the type of the value being boxed
+     */
+    class Box
+    {
+        /**
+         * @var T current value
+         */
+        private $value;
+
+        /**
+         * @param T $value new value
+         */
+        public function set($value)
+        {
+            $this->value = $value;
+        }
+
+        /**
+         * @return T current value
+         */
+        public function get()
+        {
+            return $this->value;
+        }
+    }
+
+The use of a generic may be type-hinted using e.g. `@var`:
+
+    /**
+     * @var Box<Hat> $boxed_hat
+     */
+
+    $boxed_hat = new Box();
+
+    // put the Hat in the Box:
+
+    $boxed_hat->set(new Hat());
+
+    // take the Hat out of the Box:
+
+    $hat = $boxed_hat->get();
+
+The section below describes the [@implements](#827-implements) tag, which may be used to derive a specialized
+type from a generic type.
+
+Providing a type constraint for a template type is also possible, using the optional `: T` syntax, e.g. a colon
+followed by a type expression. For example, the following defines a generic `Box<T>` class accepting only type
+arguments that extend a parent class `Model`:
+
+    /**
+     * @template TModel : Model
+     */
+    class Box<TModel>
+    {
+        // ...
+    }
+
+Note that any type expression will work as a constraint, including interfaces, traits, and generic types.
+
+### 8.27. @implements
+
+The @implements tag may be used to supply a type argument to a [generic](#generics) parent class, a generic interface,
+or a generic trait, previously declared by using the [@template](#826-template) tag.
+
+#### Syntax
+
+    @implements <"Type"> [<description>]
+
+#### Description
+
+Example: assuming a generic class `Hat<T>` (as per the [example given above](#826-template)) a specialized class
+explicitly supplying the type variable `T` can be defined as follows:
+
+    /**
+     * @implements Box<Hat>
+     */
+    class HatBox extends Box
+    {
+        // ...
+    }
+
+Note that the derived class in this example is not itself a generic class; there is no restriction, however, that
+prevents a derived type supplying a type argument from also declaring one or more template types - and also no
+restriction preventing a type argument from being filled with another type variable, as long as it is in scope.
+
 ## Appendix A. Types
 
 ### ABNF
@@ -1966,15 +2110,15 @@ class Foo
 A Type has the following [ABNF][RFC5234] definition:
 
     type-expression  = type *("|" type)
-    type             = class-name / keyword / array
-    array            = (type / array-expression) "[]" / generic
+    type             = class-name / keyword / array / generic
+    array            = (type / array-expression) "[]"
     array-expression = "(" type-expression ")"
-    generic          = collection-type "<" [type-expression "," *SP] type-expression ">"
-    collection-type  = class-name / "array"
+    generic          = generic-type "<" type-expression *("," type-expression) ">"
+    generic-type     = class-name / "array"
     class-name       = ["\"] label *("\" label)
     label            = (ALPHA / %x7F-FF) *(ALPHA / DIGIT / %x7F-FF)
-    keyword          = "array" / "bool" / "callable" / "false" / "float" / "int" / "mixed" / "null" / "object" /
-    keyword          = "resource" / "self" / "static" / "string" / "true" / "void" / "$this"
+    keyword          = "array" / "bool" / "callable" / "false" / "float" / "int" / "mixed" / "null" / "object"
+                       / "resource" / "self" / "static" / "string" / "true" / "void" / "$this"
 
 ### Details
 
@@ -2005,34 +2149,99 @@ following options:
    Each value can be of any of the given types.
    Example: `@return (int|string)[]`
 
-4. specified using the Generics notation, see the next chapter "Collections" for a description on this notation.
+4. specified using the Generics notation, see the next chapter "Generics" for a description on this notation.
+
+### Generics
+
+Generic type notation is based on Generics syntax in Java. While PHP itself does not support generics, generic type
+relationships well may (and often do) exist between types in PHP code - these type relationships can be described
+using generic type notation, and a set of tags, as described below.
+
+The standard collection types (`array`, `ArrayObject` and `ArrayAccess`) have presumed ("ambient") generic counterparts,
+as defined in the [Collections](#collections) section below.
+
+The [@template](#826-template) tag may be used to define template types in a generic type declaration.
+
+The [@implements](#827-implements) tag may be used to explicitly specify type arguments when deriving a specialized
+type from a generic type.
+
+Generic type hints may be used anywhere, and may be nested, as per the ABNF above.
 
 #### Collections
 
-The value represented by "Type" can also be a [Collection][COLLECTION], a class that contains a list of keys with
-values. Collections can be denoted using a format derived from Generics in Java; as such aptly named Generics-style
-notation.
+The value represented by "Type" can specify various generic [Collection][COLLECTION] types, e.g. classes that implement
+a list, or a key/value map.
 
-With Generics-style notation it is REQUIRED to specify a class name, or the array keyword, followed by the type of
-the values enclosed with angular brackets.
+The relevant standard [predefined interfaces and classes](http://php.net/manual/en/reserved.interfaces.php), as well as the `array` pseudo-type, have been overloaded for documentation purposes, by introducing the following virtual generic collection types in the global scope:
 
-Example: to indicate that this element returns an object of class ArrayObject that only contains a series of strings.
+    array<TIndex, TValue> = Traversable<TIndex, TValue>
 
-    @return \ArrayObject<string>
+    array<TValue> = array<int|string, TValue>
 
-The type of the values in a Collection MAY be another array and even another Collection,
+    class ArrayObject<TIndex, TValue> implements
+        IteratorAggregate<TIndex, TValue>,
+        ArrayAccess<TIndex, TValue>
+
+    class ArrayObject<TValue> = ArrayObject<mixed, TValue>
+
+    interface Traversable<TIndex, TValue>
+
+    interface Traversable<TValue> = Traversable<mixed, TValue>
+
+    interface Iterator<TIndex, TValue> extends Traversable<TIndex, TValue> {
+        abstract public TValue current()
+        abstract public TIndex key()
+        abstract public void   next()
+        abstract public void   rewind()
+        abstract public bool   valid()
+    }
+
+    Iterator<TValue> = Iterator<mixed, TValue>
+
+    interface IteratorAggregate<TIndex, TValue> extends Traversable<TIndex, TValue> {
+        abstract public Traversable<TIndex, TValue> getIterator()
+    }
+
+    interface IteratorAggregate<TValue> = IteratorAggregate<mixed, TValue>
+
+    interface ArrayAccess<TIndex, TValue> {
+        abstract public bool   offsetExists(TIndex $offset)
+        abstract public TValue offsetGet(TIndex $offset)
+        abstract public void   offsetSet(TIndex $offset, TValue $value)
+        abstract public void   offsetUnset(TIndex $offset)
+    }
+
+    interface ArrayAccess<TValue> = ArrayAccess<mixed, TValue>
+
+These type definitions are overloaded, such that, when providing only one type argument, this is always the value
+type, and the index type is assumed to be scalar; for specific index-types (e.g. generic map types) one must use
+the generic type definition with two type arguments.
+
+Note that the index-type `int|string` was chosen for native `array` and it's generic definitions.
+While, technically, any scalar value is allowed (e.g. `int|string|float|bool`), the type conversions
+associated with these are pretty risky and very rarely used in actual code. (In the exotic
+case where e.g. `float` is deliberately used as an index, the index type can of course still be
+specified as `float`, at one's own risk.)
+
+Examples:
+
+    /**
+     * @var array<string>        $foo an array of strings indexed by int or string values
+     * @var array<string,string> $bar a map of strings mapped to strings
+     */
+
+     $foo = array('foo', 'bar');
+
+     $bar = array('wham' => 'bat', 'biff' => 'qux');
+
+Note that, in type expressions, the `T[]` syntax is actually syntactic sugar, which expands to `array<T>` - for
+example, the type `(int|string)[]` is identical to `array<int|string>`.
+
+Type arguments may be nested - for example, the follow declares an array containing nested arrays of integers:
 
     @return \ArrayObject<\ArrayObject<int>>
 
-A Collection MAY optionally define the type of the keys of said Collection by adding an additional type definition
-between the angular brackets before the identifier denoting the values' type. These two should be separated by a comma.
-
-Example: to declare an ArrayObject collection containing a list of strings with integer keys.
-
-    @return \ArrayObject<int, string>
-
-The type of a value, or key, MAY consist of several different types, this can be represented by separating each
-individual type with a vertical bar sign between the angular brackets.
+Type arguments may consist of union types - for example, the following declares an array of strings or booleans:
 
     @return \ArrayObject<string|bool>
 
@@ -2049,6 +2258,11 @@ or an instance of a class that is a (sub-)child to the given class.
 > collect and shape this information to show a list of child classes
 > with each representation of the class. This would make it obvious
 > for the user which classes are acceptable as type.
+
+### Type Aliases
+
+Within the scope of a class, interface or trait with at least one [@template](#826-template) tag, [generic](#generics)
+type aliases may be used in place of class-names.
 
 ### Keyword
 
@@ -2197,6 +2411,11 @@ The following keywords are recognized by this PSR:
     of the same class but also the same instance.
 
     This type is often used as return value for methods implementing the [Fluent Interface][FLUENT] design pattern.
+
+## Appendix B. Differences Compared With The De-facto PHPDoc Standard
+
+ 1. De-facto standard PHPDoc used e.g. `@param string $names,...` to indicate variable number of parameters - in
+    PSR PHPDoc we use `@param ... string $names` to better align with the syntax used in most languages.
 
 [RFC2119]:      https://tools.ietf.org/html/rfc2119
 [RFC5234]:      https://tools.ietf.org/html/rfc5234
