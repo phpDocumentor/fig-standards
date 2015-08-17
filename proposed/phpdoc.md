@@ -228,7 +228,8 @@ interpreted as described in [RFC 2119][RFC2119].
       FUNCTION = FQN [ "::" NAME ] "()"
       PROPERTY = FQN "::$" NAME
       CONSTANT = FQN [ "::" NAME ]
-      FQN     = 1*( "\" NAME )
+      ; Fully Qualified Name (namespace, class, interface, trait)
+      FQN      = 1*( "\" NAME )
       
       NAME     = ( ALPHA / "_" / %x7F-FF ) *( ALPHA / DIGIT / "_" / %x7F-FF )
 
