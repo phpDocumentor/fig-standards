@@ -48,7 +48,7 @@ PSR-5: PHPDoc
   - [8.24. @var](#824-var)
   - [8.25. @version](#825-version)
   - [8.26. @template](#826-template)
-  - [8.27. @implements](#827-implements)
+  - [8.27. @extends](#827-extends)
 - [Appendix A. Types](#appendix-a-types)
   - [ABNF](#abnf)
   - [Details](#details)
@@ -2060,7 +2060,7 @@ The use of a generic may be type-hinted using e.g. `@var`:
 
     $hat = $boxed_hat->get();
 
-The section below describes the [@implements](#827-implements) tag, which may be used to derive a specialized
+The section below describes the [@extends](#827-extends) tag, which may be used to derive a specialized
 type from a generic type.
 
 Providing a type constraint for a template type is also possible, using the optional `: T` syntax, e.g. a colon
@@ -2077,22 +2077,23 @@ arguments that extend a parent class `Model`:
 
 Note that any type expression will work as a constraint, including interfaces, traits, and generic types.
 
-### 8.27. @implements
+### 8.27. @extends
 
-The @implements tag may be used to supply a type argument to a [generic](#generics) parent class, a generic interface,
-or a generic trait, previously declared by using the [@template](#826-template) tag.
+The @extends tag may be used to define inheritance from a [generic](#generics) or [virtual](#822-typedef) class,
+interface or trait. This tag can be used to supply type arguments to template types, e.g. defined elsewhere in
+a generic type with [@template](#826-template) tags.
 
 #### Syntax
 
-    @implements <"Type"> [<description>]
+    @extends <"Type"> [<description>]
 
 #### Description
 
 Example: assuming a generic class `Hat<T>` (as per the [example given above](#826-template)) a specialized class
-explicitly supplying the type variable `T` can be defined as follows:
+explicitly supplying the template type `T` can be defined as follows:
 
     /**
-     * @implements Box<Hat>
+     * @extends Box<Hat>
      */
     class HatBox extends Box
     {
@@ -2162,7 +2163,7 @@ as defined in the [Collections](#collections) section below.
 
 The [@template](#826-template) tag may be used to define template types in a generic type declaration.
 
-The [@implements](#827-implements) tag may be used to explicitly specify type arguments when deriving a specialized
+The [@extends](#827-extends) tag may be used to explicitly specify type arguments when deriving a specialized
 type from a generic type.
 
 Generic type hints may be used anywhere, and may be nested, as per the ABNF above.
@@ -2174,23 +2175,23 @@ a list, or a key/value map.
 
 The relevant standard [predefined interfaces and classes](http://php.net/manual/en/reserved.interfaces.php), as well as the `array` pseudo-type, have been overloaded for documentation purposes, by introducing the following virtual generic collection types in the global scope:
 
-    array<TIndex, TValue> = Traversable<TIndex, TValue>
+    array<TKey, TValue> = Traversable<TKey, TValue>
 
     array<TValue> = array<int|string, TValue>
 
-    class ArrayObject<TIndex, TValue> implements
-        IteratorAggregate<TIndex, TValue>,
-        ArrayAccess<TIndex, TValue>
+    class ArrayObject<TKey, TValue> implements
+        IteratorAggregate<TKey, TValue>,
+        ArrayAccess<TKey, TValue>
 
     class ArrayObject<TValue> = ArrayObject<mixed, TValue>
 
-    interface Traversable<TIndex, TValue>
+    interface Traversable<TKey, TValue>
 
     interface Traversable<TValue> = Traversable<mixed, TValue>
 
-    interface Iterator<TIndex, TValue> extends Traversable<TIndex, TValue> {
+    interface Iterator<TKey, TValue> extends Traversable<TKey, TValue> {
         abstract public TValue current()
-        abstract public TIndex key()
+        abstract public TKey key()
         abstract public void   next()
         abstract public void   rewind()
         abstract public bool   valid()
@@ -2198,17 +2199,17 @@ The relevant standard [predefined interfaces and classes](http://php.net/manual/
 
     Iterator<TValue> = Iterator<mixed, TValue>
 
-    interface IteratorAggregate<TIndex, TValue> extends Traversable<TIndex, TValue> {
-        abstract public Traversable<TIndex, TValue> getIterator()
+    interface IteratorAggregate<TKey, TValue> extends Traversable<TKey, TValue> {
+        abstract public Traversable<TKey, TValue> getIterator()
     }
 
     interface IteratorAggregate<TValue> = IteratorAggregate<mixed, TValue>
 
-    interface ArrayAccess<TIndex, TValue> {
-        abstract public bool   offsetExists(TIndex $offset)
-        abstract public TValue offsetGet(TIndex $offset)
-        abstract public void   offsetSet(TIndex $offset, TValue $value)
-        abstract public void   offsetUnset(TIndex $offset)
+    interface ArrayAccess<TKey, TValue> {
+        abstract public bool   offsetExists(TKey $offset)
+        abstract public TValue offsetGet(TKey $offset)
+        abstract public void   offsetSet(TKey $offset, TValue $value)
+        abstract public void   offsetUnset(TKey $offset)
     }
 
     interface ArrayAccess<TValue> = ArrayAccess<mixed, TValue>
