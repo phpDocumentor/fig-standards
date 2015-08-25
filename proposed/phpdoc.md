@@ -1974,7 +1974,7 @@ A Type has the following [ABNF][RFC5234] definition:
     class-name       = ["\"] label *("\" label)
     label            = (ALPHA / %x7F-FF) *(ALPHA / DIGIT / %x7F-FF)
     keyword          = "array" / "bool" / "callable" / "false" / "float" / "int" / "mixed" / "null" / "object" /
-    keyword          = "resource" / "self" / "static" / "string" / "true" / "void" / "$this"
+    keyword          = "resource" / "self" / "static" / "stream" / "string" / "true" / "void" / "$this"
 
 ### Details
 
@@ -2082,7 +2082,10 @@ The following keywords are recognized by this PSR:
 
 8.  `resource`, the element to which this type applies is a resource per the [definition of PHP][PHP_RESOURCE].
 
-9.  `void`, this type is commonly only used when defining the return type of a method or function.
+9.  `stream`, the element to which this type applies is a resource for which [get_resource_type()][PHP_RESOURCE_TYPE]
+    returns the value `stream`.
+
+10. `void`, this type is commonly only used when defining the return type of a method or function.
 
     The basic definition is that the element indicated with this type does not contain a value and the user should not
     rely on any retrieved value.
@@ -2119,7 +2122,7 @@ The following keywords are recognized by this PSR:
     In this example the function contains a return statement without a given value. Because there is no actual value
     specified, this also qualifies as type `void`.
 
-10. `null`, the element to which this type applies is a `NULL` value or, in technical terms, does not exist.
+11. `null`, the element to which this type applies is a `NULL` value or, in technical terms, does not exist.
 
     A big difference compared to `void` is that this type is used in any situation where the described element may at
     any given time contain an explicit `NULL` value.
@@ -2155,13 +2158,13 @@ The following keywords are recognized by this PSR:
     }
     ```
 
-11. `callable`, the element to which this type applies is a pointer to a function call. This may be any type of callable
+12. `callable`, the element to which this type applies is a pointer to a function call. This may be any type of callable
     as defined in the PHP manual about [pseudo-types][PHP_PSEUDO] or the section on [callable][PHP_CALLABLE].
 
-12. `false` or `true`, the element to which this type applies will have the value `TRUE` or `FALSE`. No other value will
+13. `false` or `true`, the element to which this type applies will have the value `TRUE` or `FALSE`. No other value will
     be returned from this element.
 
-13. `self`, the element to which this type applies is of the same class as which the documented element is originally
+14. `self`, the element to which this type applies is of the same class as which the documented element is originally
     contained.
 
     **Example:**
@@ -2186,29 +2189,30 @@ The following keywords are recognized by this PSR:
     > of child classes with each representation of the class. This would make it obvious for the user which classes are
     > acceptable as type.
 
-14. `static`, the element to which this type applies is of the same class as which the documented element is contained,
+15. `static`, the element to which this type applies is of the same class as which the documented element is contained,
     or when encountered in a subclass is of type of that subclass instead of the original class.
 
     This keyword behaves the same way as the [keyword for late static binding][PHP_OOP5LSB] (not the static method,
     property, nor variable modifier) as defined by PHP.
 
-15. `$this`, the element to which this type applies is the same exact instance as the current class in the given
+16. `$this`, the element to which this type applies is the same exact instance as the current class in the given
     context. As such this type is a stricter version of `static` as, in addition, the returned instance must not only be
     of the same class but also the same instance.
 
     This type is often used as return value for methods implementing the [Fluent Interface][FLUENT] design pattern.
 
-[RFC2119]:      https://tools.ietf.org/html/rfc2119
-[RFC5234]:      https://tools.ietf.org/html/rfc5234
-[RFC2396]:      https://tools.ietf.org/html/rfc2396
-[SEMVER2]:      http://www.semver.org
-[PHP_SUBSTR]:   https://php.net/manual/function.substr.php
-[PHP_RESOURCE]: https://php.net/manual/language.types.resource.php
-[PHP_PSEUDO]:   https://php.net/manual/language.pseudo-types.php
-[PHP_CALLABLE]: https://php.net/manual/language.types.callable.php
-[PHP_OOP5LSB]:  https://php.net/manual/language.oop5.late-static-bindings.php
-[SPDX]:         https://www.spdx.org/licenses
-[DEFACTO]:      http://www.phpdoc.org/docs/latest/index.html
-[PHPDOC.ORG]:   http://www.phpdoc.org/
-[FLUENT]:       https://en.wikipedia.org/wiki/Fluent_interface
-[COLLECTION]:   https://en.wikipedia.org/wiki/Collection_(abstract_data_type)
+[RFC2119]:           https://tools.ietf.org/html/rfc2119
+[RFC5234]:           https://tools.ietf.org/html/rfc5234
+[RFC2396]:           https://tools.ietf.org/html/rfc2396
+[SEMVER2]:           http://www.semver.org
+[PHP_RESOURCE_TYPE]: https://php.net/manual/function.get-resource-type.php
+[PHP_SUBSTR]:        https://php.net/manual/function.substr.php
+[PHP_RESOURCE]:      https://php.net/manual/language.types.resource.php
+[PHP_PSEUDO]:        https://php.net/manual/language.pseudo-types.php
+[PHP_CALLABLE]:      https://php.net/manual/language.types.callable.php
+[PHP_OOP5LSB]:       https://php.net/manual/language.oop5.late-static-bindings.php
+[SPDX]:              https://www.spdx.org/licenses
+[DEFACTO]:           http://www.phpdoc.org/docs/latest/index.html
+[PHPDOC.ORG]:        http://www.phpdoc.org/
+[FLUENT]:            https://en.wikipedia.org/wiki/Fluent_interface
+[COLLECTION]:        https://en.wikipedia.org/wiki/Collection_(abstract_data_type)
