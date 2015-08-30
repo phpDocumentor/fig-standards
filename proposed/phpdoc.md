@@ -48,7 +48,7 @@ PSR-5: PHPDoc
   - [8.24. @var](#824-var)
   - [8.25. @version](#825-version)
   - [8.26. @template](#826-template)
-  - [8.27. @extends](#827-extends)
+  - [8.27. @inherits](#827-inherits)
 - [Appendix A. Types](#appendix-a-types)
   - [ABNF](#abnf)
   - [Details](#details)
@@ -2060,7 +2060,7 @@ The use of a generic may be type-hinted using e.g. `@var`:
 
     $hat = $boxed_hat->get();
 
-The section below describes the [@extends](#827-extends) tag, which may be used to derive a specialized
+The section below describes the [@inherits](#827-inherits) tag, which may be used to derive a specialized
 type from a generic type.
 
 Providing a type constraint for a template type is also possible, using the optional `: T` syntax, e.g. a colon
@@ -2077,23 +2077,24 @@ arguments that extend a parent class `Model`:
 
 Note that any type expression will work as a constraint, including interfaces, traits, and generic types.
 
-### 8.27. @extends
+### 8.27. @inherits
 
-The @extends tag may be used to define inheritance from a [generic](#generics) or [virtual](#822-typedef) class,
+The @inherits tag may be used to define inheritance from a [generic](#generics) or [virtual](#822-typedef) class,
 interface or trait. This tag can be used to supply type arguments to template types, e.g. defined elsewhere in
 a generic type with [@template](#826-template) tags.
 
 #### Syntax
 
-    @extends <"Type"> [<description>]
+    @inherits <"Type"> [<description>]
 
 #### Description
 
-Example: assuming a generic class `Hat<T>` (as per the [example given above](#826-template)) a specialized class
+The @inherits tag is necessary, if you wish to supply type arguments to a generic parent class or interface.
+For example, assuming a generic class `Hat<T>` (as per the [example given above](#826-template)) a specialized class
 explicitly supplying the template type `T` can be defined as follows:
 
     /**
-     * @extends Box<Hat>
+     * @inherits Box<Hat>
      */
     class HatBox extends Box
     {
@@ -2163,7 +2164,7 @@ as defined in the [Collections](#collections) section below.
 
 The [@template](#826-template) tag may be used to define template types in a generic type declaration.
 
-The [@extends](#827-extends) tag may be used to explicitly specify type arguments when deriving a specialized
+The [@inherits](#827-inherits) tag may be used to explicitly specify type arguments when deriving a specialized
 type from a generic type.
 
 Generic type hints may be used anywhere, and may be nested, as per the ABNF above.
