@@ -24,7 +24,7 @@ PSR-5: PHPDoc
 - [8. Tags](#8-tags)
   - [8.1.  @api](#81-api)
   - [8.2.  @author](#82-author)
-  - [8.3.  @category [deprecated]](#83-category-deprecated) 
+  - [8.3.  @category [deprecated]](#83-category-deprecated)
   - [8.4.  @copyright](#84-copyright)
   - [8.5.  @deprecated](#85-deprecated)
   - [8.6.  @example](#86-example)
@@ -240,21 +240,21 @@ interpreted as described in [RFC 2119][RFC2119].
 * A DocBlock MUST directly precede a "Structural Element"
 
   > An exception to this principle is the File-level DocBlock which MUST be
-  > placed at the top of a PHP source code file as the first DocBlock in a 
-  > file. 
+  > placed at the top of a PHP source code file as the first DocBlock in a
+  > file.
   >
   > To prevent ambiguity when a Structural Element comes directly after a
-  > File-level DocBlock MUST that element have its own DocBlock in 
+  > File-level DocBlock MUST that element have its own DocBlock in
   > addition to the File-level DocBlock.
   >
   > Example of a valid File-level DocBlock:
   >
-  > ``` 
+  > ```
   > <?php
   > /**
   >  * This is a file-level DocBlock
   >  */
-  >  
+  >
   > /**
   >  * This is a class DocBlock
   >  */
@@ -263,7 +263,7 @@ interpreted as described in [RFC 2119][RFC2119].
   > ```
   >
   > Example of an invalid File-level DocBlock
-  > 
+  >
   > ```
   > <?php
   > /**
@@ -310,10 +310,10 @@ If a Description is provided, then it MUST be preceded by a Summary. Otherwise
 the Description will be considered the Summary, until the end of the Summary
 is reached.
 
-Because a Summary is comparable to a chapter title it is beneficial to use as 
-little formatting as possible. As such, contrary to the Description (see next 
-chapter), no recommendation is done to support a mark-up language. It is 
-explicitly left up to the implementing application whether it wants to support 
+Because a Summary is comparable to a chapter title it is beneficial to use as
+little formatting as possible. As such, contrary to the Description (see next
+chapter), no recommendation is done to support a mark-up language. It is
+explicitly left up to the implementing application whether it wants to support
 this or not.
 
 ### 5.2. Description
@@ -1654,14 +1654,14 @@ may be augmented with key definitions, properties or methods.
 
 #### Description
 
-Using the `@typedef` tag it is possible to define a new pseudo-type or 
+Using the `@typedef` tag it is possible to define a new pseudo-type or
 associative array definition for use in PHPDoc blocks.
 
 Let's explain this concept by presenting the following use-cases:
 
-1. You want to document the properties of a class that is dynamically 
+1. You want to document the properties of a class that is dynamically
    constructed, such as the `\stdClass` coming from `json_decode`.
-2. You have a configuration array for which you want to document its keys and 
+2. You have a configuration array for which you want to document its keys and
    associated values.
 3. You consume a library with magic methods who does not implement the `@method`
    tag but still want to document which methods are on it yourself.
@@ -1670,9 +1670,9 @@ Let's explain this concept by presenting the following use-cases:
 5. You have used class_alias() to create an alias and want PHPDoc to know which
    class it is based from so that methods and properties could be inherited.
 
-The first parameter for the `@typedef` tag is the base "Type", 
-including compound types and collection classes, that is the defining "Type" 
-for the second parameter. The second parameter is used to name your pseudo-type, 
+The first parameter for the `@typedef` tag is the base "Type",
+including compound types and collection classes, that is the defining "Type"
+for the second parameter. The second parameter is used to name your pseudo-type,
 and MUST be a Qualified Class Name.
 
 The second parameter MAY be omitted, in which case an "Inline PHPDoc" MUST be
@@ -1681,38 +1681,38 @@ class. Using this mechanism it is possible to provide additional information
 with an existing class, such as methods or properties that could or were not
 documented in the original.
 
-It is also possible to combine multiple "Types" into a single pseudo-type by 
+It is also possible to combine multiple "Types" into a single pseudo-type by
 using the pipe operator (`|`), the examples section contains an example of use.
 
 ##### Location
 
-A `@typedef` tag MUST always be placed on a DocBlock that belongs to a File or 
-Class. 
+A `@typedef` tag MUST always be placed on a DocBlock that belongs to a File or
+Class.
 
-When associated with a File the type definition is considered to be 
+When associated with a File the type definition is considered to be
 global and available throughout your project. It is NOT RECOMMENDED to use it
 in this fashion without due consideration as you are making your documentation
 harder to read without generator or IDE.
 
 Type definitions that are associated with a Class MUST only be used inside that
-class, or its descendants, and are considered to have a visibility similar to 
+class, or its descendants, and are considered to have a visibility similar to
 protected.
 
 ##### Adding methods and properties on objects
 
 It is also possible to add new properties or methods using an "Inline PHPDoc",
 and the `@property` and `@method` tags on any object. In this context an object
-is any Qualified Class Name (QCN) that does not match one of PHP's primitive 
-types. A notable exception is the 'object' keyword, which may have methods and 
+is any Qualified Class Name (QCN) that does not match one of PHP's primitive
+types. A notable exception is the 'object' keyword, which may have methods and
 properties added onto it.
 
 #### Examples
 
 ##### Providing an alias for another class
 
-An example may be that the `\Storage` class is aliased using the 
-`class_alias()` function as `\Session`, and the elements of the `\Session` 
-class must be documented. 
+An example may be that the `\Storage` class is aliased using the
+`class_alias()` function as `\Session`, and the elements of the `\Session`
+class must be documented.
 
 The above can be accomplished with the following tag:
 
@@ -1733,7 +1733,7 @@ class.
 
 ##### Combining multiple types into one
 
-An example of combining multiple types may be a class that is regularly 
+An example of combining multiple types may be a class that is regularly
 stubbed in unit tests:
 
     @typedef \Mockery\MockInterface|\My\DiContainer DicStub
@@ -1876,11 +1876,11 @@ Even compound statements may be documented:
 ```php
 class Foo
 {
-  protected 
+  protected
       /**
        * @var string Should contain a description
        */
-      $name, 
+      $name,
       /**
        * @var string Should contain a description
        */
@@ -1894,11 +1894,11 @@ Or constants:
 ```php
 class Foo
 {
-  const 
+  const
       /**
        * @var string Should contain a description
        */
-      MY_CONST1 = "1", 
+      MY_CONST1 = "1",
       /**
        * @var string Should contain a description
        */
