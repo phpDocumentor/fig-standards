@@ -304,7 +304,7 @@ but not more than that.
 
 A Summary MUST end with either
 
-* a full stop (.) followed by a line break
+* an end of sentence ('.。!?¡¿！？') and followed by a line break;
 * or two sequential line breaks.
 
 If a Description is provided, then it MUST be preceded by a Summary. Otherwise
