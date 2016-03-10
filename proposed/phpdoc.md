@@ -1881,13 +1881,14 @@ class Foo
 A Type has the following [ABNF][RFC5234] definition:
 
     type-expression  = type *("|" type)
-    type             = class-name / keyword / array
+    type             = class-name / keyword / array / tuple
     array            = (type / array-expression) "[]" / generic
     array-expression = "(" type-expression ")"
     generic          = collection-type "<" [type-expression "," *SP] type-expression ">"
     collection-type  = class-name / "array"
     class-name       = ["\"] label *("\" label)
     label            = (ALPHA / %x7F-FF) *(ALPHA / DIGIT / %x7F-FF)
+    tuple            = "tuple<" type-expression *( "," *SP type-expression) ">"
     keyword          = "array" / "bool" / "callable" / "false" / "float" / "int" / "mixed" / "null" / "object" /
     keyword          = "resource" / "self" / "static" / "string" / "true" / "void" / "$this"
 
@@ -1950,6 +1951,24 @@ The type of a value, or key, MAY consist of several different types, this can be
 individual type with a vertical bar sign between the angular brackets.
 
     @return \ArrayObject<string|bool>
+
+#### Tuples
+
+The value represented by "Type" can also be a [Tuple][TUPLE], a fixed-length array of values, where each value's type is
+explicitly defined. Tuples are specified using Generics-style notation.
+
+The number of types specified via Generics-style notation determines the length of the returned array, and at least one
+type MUST be defined. Additionally, the returned array MUST be sequential, as it will typically be consumed using the
+[list][PHP_LIST] operator.
+
+Example: to indicate that this element returns an array containing a string at index 0, an integer at index 1, and a
+boolean at index 2.
+
+    @return tuple<string,int,bool>
+
+Example: to indicate that this element returns an array containing three integers at indices 0, 1, and 2.
+
+    @return tuple<int,int,int>
 
 ### Valid Class Name
 
@@ -2117,6 +2136,7 @@ The following keywords are recognized by this PSR:
 [RFC5234]:      https://tools.ietf.org/html/rfc5234
 [RFC2396]:      https://tools.ietf.org/html/rfc2396
 [SEMVER2]:      http://www.semver.org
+[PHP_LIST]:     https://php.net/manual/function.list.php
 [PHP_SUBSTR]:   https://php.net/manual/function.substr.php
 [PHP_RESOURCE]: https://php.net/manual/language.types.resource.php
 [PHP_PSEUDO]:   https://php.net/manual/language.pseudo-types.php
@@ -2127,3 +2147,4 @@ The following keywords are recognized by this PSR:
 [PHPDOC.ORG]:   http://www.phpdoc.org/
 [FLUENT]:       https://en.wikipedia.org/wiki/Fluent_interface
 [COLLECTION]:   https://en.wikipedia.org/wiki/Collection_(abstract_data_type)
+[TUPLE]:        https://en.wikipedia.org/wiki/Tuple
