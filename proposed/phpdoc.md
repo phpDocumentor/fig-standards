@@ -33,7 +33,7 @@ PSR-5: PHPDoc
   - [7.7.  @global](#77-global)
   - [7.8.  @internal](#78-internal)
   - [7.9.  @license](#79-license)
-  - [7.10. @link [deprecated]](#710-link-deprecated)
+  - [7.10. @link](#710-link)
   - [7.11. @method](#711-method)
   - [7.12. @package](#712-package)
   - [7.13. @param](#713-param)
@@ -1161,10 +1161,7 @@ license.
  */
 ```
 
-### 7.10. @link [deprecated]
-
-*This tag is deprecated in favor of the `@see` tag, which since this
-specification may relate to URIs.*
+### 7.10. @link
 
 The @link tag indicates a custom relation between the associated
 "Structural Element" and a website, which is identified by an absolute URI.
