@@ -1071,7 +1071,7 @@ the developers of this software.
 
 or inline:
 
-    {@internal [description]}}
+    {@internal [description]}
 
 The inline version of this tag may, contrary to other inline tags, contain
 text but also other inline tags. To increase readability and ease parsing
@@ -1111,7 +1111,7 @@ function count()
 /**
  * Counts the number of Foo.
  *
- * {@internal Silently adds one extra Foo to compensate for lack of Foo }}
+ * {@internal Silently adds one extra Foo to compensate for lack of Foo }
  *
  * @return int Indicates the number of items.
  */
