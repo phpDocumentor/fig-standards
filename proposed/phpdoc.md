@@ -275,120 +275,132 @@ interpreted as described in [RFC 2119][RFC2119].
   > ```
 
 ## 5. The PHPDoc Format
+The PHPDoc format has the following ABNF definition:
 
-The PHPDoc format has the following [ABNF][RFC5234]
-definition:
+```ABNF
+PHPDoc             = [ SUMMARY [ DESCRIPTION ] ] [ TAGS ]
 
-    PHPDoc             = [summary] [description] [tags]
-    inline-phpdoc      = "{" *SP PHPDoc *SP "}"
-    summary            = *CHAR ("." 1*CRLF / 2*CRLF)
-    description        = 1*(CHAR / inline-tag) 1*CRLF ; any amount of characters
-                                                     ; with inline tags inside
-    tags               = *(tag 1*CRLF)
-    inline-tag         = "{" tag "}"
-    tag                = "@" tag-name [":" tag-specialization] [tag-details]
-    tag-name           = (ALPHA / "\") *(ALPHA / DIGIT / "\" / "-" / "_")
-    tag-specialization = 1*(ALPHA / DIGIT / "-")
-    tag-details        = *SP (SP tag-description / tag-signature / inline-phpdoc)
-    tag-description    = 1*(CHAR / CRLF)
-    tag-signature      = "(" *tag-argument ")"
-    tag-argument       = *SP 1*CHAR [","] *SP
+SUMMARY            = *S *( ALL-CHARS-NO-AT-NL *ALL-CHARS-NO-NL *1NL ) *S
+DESCRIPTION        = *( ALL-CHARS-NO-AT-NL *ALL-CHARS-NO-NL 1*NL ) *S
+TAGS               = "@" 1*ALL-CHARS
 
-Examples of use are included in chapter 5.4.
+ALL-CHARS          = %x01-FFFF
+ALL-CHARS-NO-NL    = %x01-09 / %x0B-0C / %x0E-FFFF
+ALL-CHARS-NO-AT-NL = %x01-09 / %x0B-0C / %x0E-3F / %x41-FFFF
+NL                 = CR LF / CR / LF
+S                  = %x09 / NL / %x0C / " "
+```
+
+An equivalent PCRE of the ABNF for PHP:
+
+```RegExp
+/(?(DEFINE)
+  (?<ALL_CHARS>[\x01-\x{ffff}])
+  (?<ALL_CHARS_NO_NL>[\x01-\x09\x0b-\x0c\x0e-\x{ffff}])
+  (?<ALL_CHARS_NO_AT_NL>[\x01-\x09\x0b-\x0c\x0e-\x3f\x41-\x{ffff}])
+  (?<NL>(?:\r\n|\n|\r))
+)
+^\s*(?:
+  (?<SUMMARY>(?:(?&ALL_CHARS_NO_AT_NL)(?&ALL_CHARS_NO_NL)*(?:(?&NL)|$))*)?
+  \s*
+  (?<DESCRIPTION>(?:(?&ALL_CHARS_NO_AT_NL)(?&ALL_CHARS_NO_NL)*(?:(?&NL)+|$))*)?
+  \s*
+  (?<TAGS>@(?&ALL_CHARS)+)?
+)$/x
+```
+
+Examples of use are included in [section 5.4](#54-inline-phpdoc).
 
 ### 5.1. Summary
+The **summary** is OPTIONAL but MUST be provided if a description is desired,
+see next section. A summary MUST end with two sequential line breaks and lines
+MUST NOT start with the at-sign (@).
 
-A Summary MUST contain an abstract of the "Structural Element" defining the
-purpose. It is RECOMMENDED for Summaries to span a single line or at most two
+A summary MUST contain an abstract of the structural element defining the
+purpose. It is RECOMMENDED for summaries to span a single line or at most two
 but not more than that.
 
-A Summary MUST end with either
-
-* a full stop (.) followed by a line break
-* or two sequential line breaks.
-
-If a Description is provided, then it MUST be preceded by a Summary. Otherwise
-the Description will be considered the Summary, until the end of the Summary
-is reached.
-
-Because a Summary is comparable to a chapter title it is beneficial to use as 
-little formatting as possible. As such, contrary to the Description (see next 
-chapter), no recommendation is done to support a mark-up language. It is 
-explicitly left up to the implementing application whether it wants to support 
-this or not.
+Because a summary is comparable to a chapter title it is beneficial to use as 
+little formatting as possible. As such, contrary to the description, no
+recommendation is given to support a mark-up language. It is explicitly left up
+to the implementing application whether it wants to support this or not.
 
 ### 5.2. Description
+The **description** is OPTIONAL but SHOULD be included when the structural
+element, which this DocBlock precedes, contains more operations, or more complex
+operations, than can be described in the summary alone. A description can
+contain any character but lines MUST NOT start with the at-sign (@).
 
-The Description is OPTIONAL but SHOULD be included when the
-"Structural Element", which this DocBlock precedes, contains more operations, or
-more complex operations, than can be described in the Summary alone.
-
-Any application parsing the Description is RECOMMENDED to support the
+Any application parsing the description is RECOMMENDED to support the
 Markdown mark-up language for this field so that it is possible for the author
 to provide formatting and a clear way of representing code examples.
 
-Common uses for the Description are (amongst others):
+Common uses for the description are (amongst others):
 
-* To provide more detail than the Summary on what this method does.
+* To provide more detail than the summary on what this method does.
 * To specify of what child elements an input or output array, or object, is
   composed.
-* To provide a set of common use cases or scenarios in which the
-  "Structural Element" may be applied.
+* To provide a set of common use cases or scenarios in which the structural
+  element may be applied.
 
 ### 5.3. Tags
+**Tags** are OPTIONAL and introduced by the first line in the PHPDoc that starts
+with the at-sign (@). They provide a way for authors to supply concise meta-data
+regarding the succeeding structural element. Each tag MUST start on a new line
+with the at-sign (@) as the very first character followed by white-space and
+meta-data.
 
-Tags provide a way for authors to supply concise meta-data regarding the
-succeeding "Structural Element". Each tag starts on a new line, followed
-by an at-sign (@) and a tag-name followed by white-space and meta-data
-(including a description) or Inline PHPDoc.
-
-If meta-data is provided, it MAY span multiple lines and COULD follow a
-strict format, and as such provide parameters, as dictated by the type of tag.
-The type of the tag can be derived from its name.
+If meta-data is provided, it MAY span multiple lines and COULD follow a strict
+format, and, as such, provide parameters, as dictated by the type of tag. The
+type of the tag can be derived from its name.
 
 For example:
 
-> `@param string $argument1 This is a parameter.`
->
-> The above tag consists of a name ('param') and meta-data
-> ('string $argument1 This is a parameter.') where the meta-data is split into a
-> "Type" ('string'), variable name ('$argument') and description
-> ('This is a parameter.').
+```php
+/**
+ * @param string $argument1 This is a parameter.
+ */
+```
+
+The above tag consists of a name (`param`) and meta-data that is split into a
+type (`string`), variable name (`$argument1`), and description (`This is a
+parameter.`).
 
 The description of a tag MUST support Markdown as a formatting language. Due to
 the nature of Markdown it is legal to start the description of the tag on the
 same or the subsequent line and interpret it in the same way.
 
-So the following tags are semantically identical:
+Hence, the following tags are semantically identical:
 
-    /**
-     * @var string This is a description.
-     * @var string This is a
-     *    description.
-     * @var string
-     *    This is a description.
-     */
+```php
+/**
+ * @param string $p1 This is a description.
+ * @param string $p2 This is a
+ *     description.
+ * @param string $p3
+ *     This is a description.
+ */
+```
 
 A variation of this is where, instead of a description, a tag signature is used;
-in most cases the tag will in fact be an "Annotation". The tag signature is
-able to provide the annotation with parameters regarding its operation.
+in most cases the tag will in fact be an “annotation”. The tag signature is able
+to provide the annotation with parameters regarding its operation.
 
 If a tag signature is present then there MUST NOT be a description present in
 the same tag.
 
-The meta-data supplied by tags could result in a change of actual runtime
-behavior of the succeeding "Structural Element", in which case the term
-"Annotation" is commonly used instead of "Tag".
+The meta-data supplied by tags could result in a change of actual run-time
+behavior of the succeeding structural element, in which case the term
+annotation is commonly used instead of tag.
 
 Annotations will not be described in further detail in this specification as
 this falls beyond scope. This specification provides a basis on top of which
 annotations may be implemented.
 
 #### 5.3.1. Tag Name
-
 Tag names indicate what type of information is represented by this tag, or in
-case of annotations which behaviour must be injected into the succeeding
-"Structural Element".
+case of annotations which behavior must be injected into the succeeding
+structural element.
 
 In support of annotations, it is allowable to introduce a set of tags designed
 specifically for an individual application or subset of applications (and thus
@@ -399,35 +411,44 @@ These tags, or annotations, MUST provide a namespace by either
 * prefixing the tag name with a PHP-style namespace, or by
 * prefixing the tag name with a single vendor-name followed by a hyphen.
 
-Example of a tag name prefixed with a php-style namespace (the prefixing slash
+Example of a tag name prefixed with a PHP-style namespace (the prefixing slash
 is OPTIONAL):
 
 ```php
-@\Doctrine\Orm\Mapping\Entity()
+/**
+ * @\Doctrine\Orm\Mapping\Entity()
+ */
 ```
 
-> *Note*: The PHPDoc Standard DOES NOT make assumptions on the meaning of a tag
-> unless specified in this document or subsequent additions or extensions.
->
-> This means that you CAN use namespace aliases as long as a prefixing namespace
-> element is provided. Thus the following is legal as well:
->
->     @Mapping\Entity()
->
-> Your own library or application may check for namespace aliases and make a
-> FQCN from this; this has no impact on this standard.
-
-> *Important*: Tools using the PHPDoc Standard MAY interpret namespaces that are
-> registered with that application and apply custom behaviour.
-
-Example of a tag name prefixed with a vendor name and hyphen:
+##### Note
+The PHPDoc PSR DOES NOT make assumptions on the meaning of a tag
+unless specified in this document or subsequent additions or extensions. This
+means that you CAN use namespace aliases as long as a prefixing namespace
+element is provided. Thus the following is legal as well:
 
 ```php
-@phpdoc-event transformer.transform.pre
+/**
+ * @Mapping\Entity()
+ */
+```
+
+Your own library or application may check for namespace aliases and make a FQCN
+from this; this has no impact on this standard.
+
+##### Important
+Tools using the PHPDoc PSR MAY interpret namespaces that are
+registered with that application and apply custom behaviour. Example of a tag
+name prefixed with a vendor name and hyphen:
+
+```php
+/**
+ * @phpdoc-event transformer.transform.pre
+ */
 ```
 
 Tag names that are not prefixed with a vendor or namespace MUST be described in
-this specification (see chapter 7) and/or any official addendum.
+this specification (see [section 7](#7-describing-hashes)) and/or any official
+addendum.
 
 #### 5.3.2. Tag Specialization
 
@@ -2113,17 +2134,20 @@ The following keywords are recognized by this PSR:
 
     This type is often used as return value for methods implementing the [Fluent Interface][FLUENT] design pattern.
 
-[RFC2119]:      https://tools.ietf.org/html/rfc2119
-[RFC5234]:      https://tools.ietf.org/html/rfc5234
-[RFC2396]:      https://tools.ietf.org/html/rfc2396
-[SEMVER2]:      http://www.semver.org
-[PHP_SUBSTR]:   https://php.net/manual/function.substr.php
-[PHP_RESOURCE]: https://php.net/manual/language.types.resource.php
-[PHP_PSEUDO]:   https://php.net/manual/language.pseudo-types.php
-[PHP_CALLABLE]: https://php.net/manual/language.types.callable.php
-[PHP_OOP5LSB]:  https://php.net/manual/language.oop5.late-static-bindings.php
-[SPDX]:         https://www.spdx.org/licenses
-[DEFACTO]:      http://www.phpdoc.org/docs/latest/index.html
-[PHPDOC.ORG]:   http://www.phpdoc.org/
-[FLUENT]:       https://en.wikipedia.org/wiki/Fluent_interface
+<!-- Keep hyperlinks sorted alphabetically! -->
+
 [COLLECTION]:   https://en.wikipedia.org/wiki/Collection_(abstract_data_type)
+[DEFACTO]:      http://www.phpdoc.org/docs/latest/index.html
+[FLUENT]:       https://en.wikipedia.org/wiki/Fluent_interface
+[PCRE]:         http://www.pcre.org/
+[PHP_CALLABLE]: https://secure.php.net/language.types.callable
+[PHP_OOP5LSB]:  https://secure.php.net/language.oop5.late-static-bindings
+[PHP_PSEUDO]:   https://secure.php.net/language.pseudo-types
+[PHP_RESOURCE]: https://secure.php.net/language.types.resource
+[PHP_SUBSTR]:   https://secure.php.net/function.substr
+[PHPDOC.ORG]:   http://www.phpdoc.org/
+[RFC2119]:      https://tools.ietf.org/html/rfc2119
+[RFC2396]:      https://tools.ietf.org/html/rfc2396
+[RFC5234]:      https://tools.ietf.org/html/rfc5234
+[SEMVER2]:      http://www.semver.org/
+[SPDX]:         https://www.spdx.org/licenses
