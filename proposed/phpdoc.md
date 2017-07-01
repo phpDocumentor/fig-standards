@@ -348,7 +348,7 @@ The type of the tag can be derived from its name.
 
 For example:
 
-> `@param string $argument1 This is a parameter.`
+> `@param string $argument This is a parameter.`
 >
 > The above tag consists of a name ('param') and meta-data
 > ('string $argument1 This is a parameter.') where the meta-data is split into a
