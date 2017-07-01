@@ -1245,7 +1245,7 @@ be omitted; in which case 'void' is implied.
 #### Examples
 
 ```php
-class Parent
+class ParentClass
 {
     public function __call()
     {
@@ -1256,9 +1256,9 @@ class Parent
 /**
  * @method string getString()
  * @method void setInteger(int $integer)
- * @method setString(int $integer)
+ * @method setString(string $string)
  */
-class Child extends Parent
+class ChildClass extends ParentClass
 {
     <...>
 }
