@@ -230,8 +230,8 @@ times in each "DocBlock".
 
 ### 5.1. @api
 
-The @api tag is used to declare "Structural Elements" as being suitable for
-consumption by third parties.
+The @api tag is used to highlight "Structural Elements" as being part of the
+primary public API of a package.
 
 #### Syntax
 
@@ -239,29 +239,27 @@ consumption by third parties.
 
 #### Description
 
-The @api tag represents those "Structural Elements" with a public visibility
-which are intended to be the public API components for a library or framework.
-Other "Structural Elements" with a public visibility serve to support the
-internal structure and are not recommended to be used by the consumer.
+The `@api` tag should may applied to public "Structural Elements" to highlight
+them in generated documentation, pointing the consumer to the primary public
+API components of a library or framework.
 
-The exact meaning of "Structural Elements" tagged with @api MAY differ per
-project. It is however RECOMMENDED that all tagged "Structural Elements" SHOULD
-NOT change after publication unless the new version is tagged as breaking
-Backwards Compatibility.
+Other "Structural Elements" with a public visibility may be listed less
+prominently in generated documentation.
 
-#### Examples
+See also the [`@internal`](#58-internal), which may be used to hide internal
+API components from generated documentation.
+
+#### Example
 
 ```php
 /**
- * This method will not change until a major release.
+ * This service provides access to User information.
  *
  * @api
- *
- * @return void
  */
-function showVersion()
+class UserService
 {
-   <...>
+   // ...
 }
 ```
 
@@ -529,64 +527,41 @@ variable and a variable documented in the project.
 
 ### 5.8. @internal
 
-The @internal tag is used to denote that the associated "Structural Element" is
-a structure internal to this application or library. It may also be used inside
-a description to insert a piece of text that is only applicable for
-the developers of this software.
+The `@internal` tag is used to denote that the associated "Structural Element"
+should be regarded as being internal to the application, library or package.
+An optional description may be added to explain why.
 
 #### Syntax
 
-    @internal
-
-or inline:
-
-    {@internal [description]}}
-
-The inline version of this tag may, contrary to other inline tags, contain
-text but also other inline tags. To increase readability and ease parsing
-the tag should be terminated with a double closing brace, instead of a single
-one.
+    @internal [description]
 
 #### Description
 
-The @internal tag can be used as counterpart of the @api tag, indicating that
-the associated "Structural Element" is used purely for the internal workings of
-this piece of software.
+The `@internal` tag indicates that the associated "Structural Element" is intended
+only for use within the application, library or package to which it belongs.
+
+Authors MAY use this tag to indicate that an element with public visibility should
+be regarded as exempt from the API - for example:
+
+  * Static analysis tools may indicate the use of internal elements from another
+    library/package with a warning or notice.
+
+  * Library authors may regard breaking changes to internal elements as being exempt
+    from semantic versioning.
 
 When generating documentation from PHPDoc comments it is RECOMMENDED to hide the
 associated element unless the user has explicitly indicated that internal elements
 should be included.
 
-An additional use of @internal is to add internal comments or additional
-description text inline to the Description. This may be done, for example,
-to withhold certain business-critical or confusing information when generating
-documentation from the source code of this piece of software.
-
 #### Examples
-
-Mark the count function as being internal to this project:
 
 ```php
 /**
- * @internal
- *
- * @return int Indicates the number of items.
+ * @internal this is used internally to bootstrap the application
  */
-function count()
+function run()
 {
-    <...>
-}
-
-/**
- * Counts the number of Foo.
- *
- * {@internal Silently adds one extra Foo to compensate for lack of Foo }}
- *
- * @return int Indicates the number of items.
- */
-function count()
-{
-    <...>
+    // ...
 }
 ```
 
