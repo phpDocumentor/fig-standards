@@ -239,14 +239,14 @@ primary public API of a package.
 
 #### Description
 
-The `@api` tag should may applied to public "Structural Elements" to highlight
+The `@api` tag MAY be applied to public "Structural Elements" to highlight
 them in generated documentation, pointing the consumer to the primary public
 API components of a library or framework.
 
-Other "Structural Elements" with a public visibility may be listed less
+Other "Structural Elements" with a public visibility MAY be listed less
 prominently in generated documentation.
 
-See also the [`@internal`](#58-internal), which may be used to hide internal
+See also the [`@internal`](#58-internal), which MAY be used to hide internal
 API components from generated documentation.
 
 #### Example
@@ -529,7 +529,7 @@ variable and a variable documented in the project.
 
 The `@internal` tag is used to denote that the associated "Structural Element"
 should be regarded as being internal to the application, library or package.
-An optional description may be added to explain why.
+An optional description MAY be added to explain why.
 
 #### Syntax
 
@@ -543,10 +543,10 @@ only for use within the application, library or package to which it belongs.
 Authors MAY use this tag to indicate that an element with public visibility should
 be regarded as exempt from the API - for example:
 
-  * Static analysis tools may indicate the use of internal elements from another
+  * Static analysis tools MAY indicate the use of internal elements from another
     library/package with a warning or notice.
 
-  * Library authors may regard breaking changes to internal elements as being exempt
+  * Library authors MAY regard breaking changes to internal elements as being exempt
     from semantic versioning.
 
 When generating documentation from PHPDoc comments it is RECOMMENDED to hide the
