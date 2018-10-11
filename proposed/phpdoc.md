@@ -810,6 +810,7 @@ The following keywords are recognized by this PSR:
 
 [RFC2119]:      https://tools.ietf.org/html/rfc2119
 [RFC5234]:      https://tools.ietf.org/html/rfc5234
+[PHP_BASICS]:   https://php.net/language.oop5.basic
 [PHP_FQCN]:     https://php.net/language.namespaces.rules
 [PHP_RESOURCE]: https://php.net/manual/language.types.resource.php
 [PHP_PSEUDO]:   https://php.net/manual/language.pseudo-types.php
