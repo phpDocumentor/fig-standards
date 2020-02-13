@@ -669,4 +669,4 @@ The following keywords are recognized by this PSR:
 [DEFACTO]:      http://www.phpdoc.org/docs/latest/index.html
 [PHPDOC.ORG]:   http://www.phpdoc.org/
 [FLUENT]:       https://en.wikipedia.org/wiki/Fluent_interface
-[TAG_PSR]:      TBD
+[TAG_PSR]:      phpdoc-tags.md
